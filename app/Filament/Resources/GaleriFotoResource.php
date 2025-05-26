@@ -81,14 +81,14 @@ class GaleriFotoResource extends Resource
                             ->label('Featured')
                             ->default(false),
 
-                        Forms\Components\TextInput::make('urutan')
-                            ->numeric()
-                            ->default(0),
-
                         Forms\Components\Toggle::make('status')
                             ->label('Aktif')
                             ->default(true),
-                    ])->columns(3),
+
+                        Forms\Components\TextInput::make('urutan')
+                            ->numeric()
+                            ->default(0),
+                    ])->columns(2),
             ]);
     }
 

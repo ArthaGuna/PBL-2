@@ -11,9 +11,11 @@
     </div>
 
     {{-- Teks --}}
-   <div class="text-center mt-12 px-5">
-        <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-black">
-            Temukan ketenangan alami bersama <span class="text-blue-600 dark:text-blue-500">suasana terbaik</span> untuk hari Anda.
+    <div class="text-center mt-12 px-5">
+        <h1
+            class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-black">
+            Temukan ketenangan alami bersama <span class="text-blue-600 dark:text-blue-500">suasana terbaik</span> untuk
+            hari Anda.
         </h1>
         <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
             Nikmati kenyamanan, kehangatan, dan kedamaian yang menyatu dalam setiap momen.
@@ -22,11 +24,13 @@
     </div>
 
     {{-- Cards --}}
-        <div class="mt-12 max-w-7xl mx-auto px-5 grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <div class="mt-12 max-w-7xl mx-auto px-5 grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {{-- Card 1 --}}
-        <div class="bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+        <div
+            class="bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
             <a href="#">
-                <img class="rounded-t-lg w-full h-48 object-cover" src="{{ asset('img/cards-img.png') }}" alt="Card Image 1" />
+                <img class="rounded-t-lg w-full h-48 object-cover" src="{{ asset('img/cards-img.png') }}"
+                    alt="Card Image 1" />
             </a>
             <div class="p-5">
                 <a href="#">
@@ -35,16 +39,19 @@
                 <p class="mb-3 font-normal text-gray-700">
                     Rasakan ketenangan dan suasana alami yang mendalam dalam setiap kunjungan Anda.
                 </p>
-                <a href="#" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <a href="#"
+                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">
                     Lihat selengkapnya
                 </a>
             </div>
         </div>
 
         {{-- Card 2 --}}
-        <div class="bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+        <div
+            class="bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
             <a href="#">
-                <img class="rounded-t-lg w-full h-48 object-cover" src="{{ asset('img/cards-img.png') }}" alt="Card Image 2" />
+                <img class="rounded-t-lg w-full h-48 object-cover" src="{{ asset('img/cards-img.png') }}"
+                    alt="Card Image 2" />
             </a>
             <div class="p-5">
                 <a href="#">
@@ -53,16 +60,19 @@
                 <p class="mb-3 font-normal text-gray-700">
                     Nikmati panorama yang memanjakan mata dan menyegarkan jiwa Anda setiap hari.
                 </p>
-                <a href="#" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <a href="#"
+                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">
                     Lihat selengkapnya
                 </a>
             </div>
         </div>
 
         {{-- Card 3 --}}
-        <div class="bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+        <div
+            class="bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
             <a href="#">
-                <img class="rounded-t-lg w-full h-48 object-cover" src="{{ asset('img/cards-img.png') }}" alt="Card Image 3" />
+                <img class="rounded-t-lg w-full h-48 object-cover" src="{{ asset('img/cards-img.png') }}"
+                    alt="Card Image 3" />
             </a>
             <div class="p-5">
                 <a href="#">
@@ -71,7 +81,8 @@
                 <p class="mb-3 font-normal text-gray-700">
                     Ciptakan momen-momen penuh kedamaian dalam suasana yang menenangkan hati.
                 </p>
-                <a href="#" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                <a href="#"
+                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">
                     Lihat selengkapnya
                 </a>
             </div>
@@ -84,32 +95,7 @@
             <h2 class="text-3xl font-bold text-gray-800 mb-2">Galeri Kami</h2>
             <div class="mx-auto mb-8 w-16 h-1 bg-blue-500 rounded"></div>
 
-            {{-- Carousel --}}
-            <div class="flex items-center justify-center space-x-6 overflow-hidden">
-                {{-- Tombol Sebelumnya --}}
-                <button id="prevBtn" class="text-blue-500 hover:text-blue-700 text-2xl focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-
-                {{-- Gambar Galeri --}}
-                <div id="galleryImages" class="flex gap-6 transition-transform duration-500 ease-in-out">
-                    <img src="{{ asset('img/cards-img.png') }}" class="w-72 rounded-lg shadow-md object-cover" alt="Galeri 1">
-                    <img src="{{ asset('img/cards-img.png') }}" class="w-72 rounded-lg shadow-md object-cover" alt="Galeri 2">
-                    <img src="{{ asset('img/cards-img.png') }}" class="w-72 rounded-lg shadow-md object-cover" alt="Galeri 3">
-                </div>
-
-                {{-- Tombol Selanjutnya --}}
-                <button id="nextBtn" class="text-blue-500 hover:text-blue-700 text-2xl focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
-            </div>
+            @livewire('featured-galeri-carousell')
         </div>
     </section>
-
-
-
 </x-app-layout>

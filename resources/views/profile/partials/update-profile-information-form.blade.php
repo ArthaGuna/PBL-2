@@ -44,7 +44,12 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Simpan') }}</x-primary-button>
+            <button type="submit"
+                class="inline-flex items-center px-4 py-2 bg-blue-600 rounded-lg font-semibold text-xs text-white uppercase tracking-widest 
+                    hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 transition ease-in-out duration-150">
+                {{ __('Simpan') }}
+            </button>
+
 
             @if (session('status') === 'profile-updated')
                 <p

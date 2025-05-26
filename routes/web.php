@@ -61,10 +61,17 @@ Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
 
+// Auth
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Route booking
+    Route::get('/booking', function () {
+        return view('auth.booking');
+    })->name('booking');
 });
+
 
 require __DIR__ . '/auth.php';

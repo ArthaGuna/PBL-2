@@ -38,9 +38,11 @@
         </div>
 
         <div class="flex items-center gap-4 mt-6">
-            <x-primary-button class="bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300">
+            <button type="submit"
+                class="inline-flex items-center px-4 py-2 bg-blue-600 rounded-lg font-semibold text-xs text-white uppercase tracking-widest 
+                    hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 transition ease-in-out duration-150">
                 {{ __('Perbarui Kata Sandi') }}
-            </x-primary-button>
+            </button>
 
             @if (session('status') === 'password-updated')
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"

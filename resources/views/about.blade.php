@@ -20,13 +20,13 @@
             <!-- Teks -->
             <div class="text-gray-700 text-justify text-sm sm:text-base leading-relaxed space-y-4">
                 <p>
-                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisi eget ultricies tincidunt, nisl nisl aliquam nisi, eget ultricies nisl nisi eget nisl. Nullam auctor, nisi eget ultricies tincidunt, nisl nisl aliquam nisi, eget ultricies nisl nisi eget nisl. Suspendisse potenti. Sed euismod, mauris nec aliquet varius, justo tortor pharetra nulla, nec feugiat libero nisl non sapien.
+                   Selamat datang di Wisata Air Panas Penatahan — tempat di mana ketenangan alam dan kehangatan alami berpadu sempurna. Terletak di jantung Desa Penatahan yang asri, kami hadir untuk memberikan pengalaman relaksasi dan penyembuhan melalui sumber air panas alami yang kaya akan mineral.
                 </p>
                 <p>
-                    Quisque facilisis orci sit amet felis pulvinar, a varius enim iaculis. Vivamus vitae dolor nec metus sagittis vulputate at eget felis. Aenean tincidunt, lacus at lacinia finibus, nulla orci efficitur magna, sit amet condimentum nulla risus in justo. Sed quis eros est. Nullam vitae laoreet nisl. Pellentesque vestibulum enim vitae lorem iaculis, vel dictum diam porttitor. Nullam egestas lacus a velit fermentum, non dictum risus sollicitudin
+                    Kami berkomitmen untuk menghadirkan suasana yang nyaman, bersih, dan ramah bagi setiap pengunjung. Dengan memadukan keindahan alam, pelayanan yang hangat, dan budaya lokal yang kaya, kami berharap dapat menjadi destinasi pilihan untuk beristirahat dan melepas penat dari hiruk-pikuk keseharian.
                 </p>
                 <p>
-                   Etiam suscipit sem at ante tristique dapibus. Vestibulum a rhoncus lorem, id vulputate elit. Curabitur lacinia malesuada finibus. Quisque a lorem vel tellus facilisis ultrices. Nullam fringilla nibh nec justo placerat, vel iaculis risus accumsan.
+                   Mari rasakan sendiri keajaiban alam yang kami tawarkan, dan jadikan momen Anda di Penatahan sebagai kenangan yang tak terlupakan.
                 </p>
             </div>
         </div>

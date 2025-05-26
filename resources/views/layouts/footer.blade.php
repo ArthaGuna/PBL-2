@@ -19,9 +19,9 @@
             <div>
                 <h2 class="text-lg font-semibold mb-3">Kontak Kami</h2>
                 <ul class="space-y-2 text-sm text-gray-300">
-                    <li><a href="#" class="hover:text-white">WhatsApp</a></li>
-                    <li><a href="#" class="hover:text-white">Facebook</a></li>
-                    <li><a href="#" class="hover:text-white">Instagram</a></li>
+                    <li><a href="https://wa.me/6281237404325" class="hover:text-white">WhatsApp</a></li>
+                    <li><a href="https://www.facebook.com/yehpanespenatahan" class="hover:text-white">Facebook</a></li>
+                    <li><a href="https://www.instagram.com/yehpanaspenatahan/" class="hover:text-white">Instagram</a></li>
                 </ul>
             </div>
 

@@ -36,8 +36,16 @@
                         <!-- Tanggal Kunjungan -->
                         <div class="mb-4">
                             <label for="tanggal_kunjungan" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Kunjungan</label>
-                            <input type="date" id="tanggal_kunjungan" name="tanggal_kunjungan" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <div class="relative max-w-sm">
+                                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                                    </svg>
+                                </div>
+                                <input type="date" id="tanggal_kunjungan" name="tanggal_kunjungan" 
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" 
+                                    min="{{ date('Y-m-d') }}">
+                            </div>
                         </div>
                         
                         <!-- Waktu Kunjungan -->
@@ -141,7 +149,7 @@
                                 <span class="text-gray-600">Harga Tiket:</span>
                                 <span class="font-medium">Rp 25.000/orang</span>
                             </div>
-                            <div class="flex justify-between mb-2 text-green-600" id="promo-section">
+                            <div class="flex justify-between mb-2 text-green-600 hidden" id="promo-section">
                                 <span class="text-gray-600">Diskon:</span>
                                 <span class="font-medium" id="summary-discount">Rp 0</span>
                             </div>
@@ -223,139 +231,270 @@
         </div>
     </div>
 
+    {{-- javascripts --}}
     @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Step Navigation Functions
-            function goToStep(step) {
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded'); // Debug log
+        
+        // Initialize date input with proper min date
+        const tanggalKunjunganEl = document.getElementById('tanggal_kunjungan');
+        if (tanggalKunjunganEl) {
+            const today = new Date().toISOString().split('T')[0];
+            tanggalKunjunganEl.setAttribute('min', today);
+            console.log('Date input initialized with min date:', today);
+        }
+        
+        // Format tanggal saat diubah
+        tanggalKunjunganEl.addEventListener('change', function() {
+            if (this.value) {
+                const [year, month, day] = this.value.split('-');
+                this.dataset.formatted = `${day}/${month}/${year}`;
+                console.log('Date formatted:', this.dataset.formatted);
+            }
+        });
+
+        // Step Navigation Functions
+        function goToStep(step) {
+            console.log('Attempting to go to step:', step);
+            
+            try {
                 // Hide all steps
-                document.querySelectorAll('[id^="step-"]').forEach(el => {
+                const allSteps = document.querySelectorAll('[id^="step-"]:not([id*="indicator"])');
+                console.log('Found steps:', allSteps.length);
+                allSteps.forEach(el => {
                     el.classList.add('hidden');
+                    console.log('Hidden step:', el.id);
                 });
                 
                 // Show current step
-                document.getElementById(`step-${step}`).classList.remove('hidden');
+                const currentStep = document.getElementById(`step-${step}`);
+                if (currentStep) {
+                    currentStep.classList.remove('hidden');
+                    console.log('Showing step:', `step-${step}`);
+                } else {
+                    console.error('Step not found:', `step-${step}`);
+                }
                 
                 // Update step indicators
-                document.querySelectorAll('[id^="step-indicator-"]').forEach(el => {
+                const allIndicators = document.querySelectorAll('[id^="step-indicator-"]');
+                console.log('Found indicators:', allIndicators.length);
+                allIndicators.forEach(el => {
                     el.classList.remove('border-blue-600', 'text-blue-600');
                     el.classList.add('border-gray-200', 'text-gray-500');
                 });
                 
                 // Highlight current step indicator
                 const currentIndicator = document.getElementById(`step-indicator-${step}`);
-                currentIndicator.classList.remove('border-gray-200', 'text-gray-500');
-                currentIndicator.classList.add('border-blue-600', 'text-blue-600');
+                if (currentIndicator) {
+                    currentIndicator.classList.remove('border-gray-200', 'text-gray-500');
+                    currentIndicator.classList.add('border-blue-600', 'text-blue-600');
+                    console.log('Updated indicator for step:', step);
+                }
                 
                 // Update summary if going to step 3
                 if (step === 3) {
                     updateOrderSummary();
                 }
+            } catch (error) {
+                console.error('Error in goToStep:', error);
+            }
+        }
+        
+        // Validation functions
+        function validateStep1() {
+            const tanggal = document.getElementById('tanggal_kunjungan').value;
+            const waktu = document.getElementById('waktu_kunjungan').value;
+            const jumlah = document.getElementById('jumlah_pengunjung').value;
+            
+            console.log('Step 1 validation:', {tanggal, waktu, jumlah});
+            
+            if (!tanggal) {
+                alert('Harap pilih tanggal kunjungan');
+                return false;
+            }
+            if (!waktu) {
+                alert('Harap pilih waktu kunjungan');
+                return false;
+            }
+            if (!jumlah || parseInt(jumlah) < 1) {
+                alert('Harap masukkan jumlah pengunjung yang valid');
+                return false;
             }
             
-            // Event Listeners for Navigation Buttons
-            document.getElementById('next-step-1').addEventListener('click', function() {
-                // Basic validation for step 1
-                const tanggal = document.getElementById('tanggal_kunjungan').value;
-                const waktu = document.getElementById('waktu_kunjungan').value;
-                const jumlah = document.getElementById('jumlah_pengunjung').value;
-                
-                if (!tanggal || !waktu || !jumlah) {
-                    alert('Harap lengkapi semua informasi kunjungan');
-                    return;
-                }
-                
-                goToStep(2);
-            });
+            return true;
+        }
+        
+        function validateStep2() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
             
-            document.getElementById('prev-step-2').addEventListener('click', function() {
+            console.log('Step 2 validation:', {name, email, phone});
+            
+            if (!name) {
+                alert('Harap masukkan nama lengkap');
+                return false;
+            }
+            if (!email) {
+                alert('Harap masukkan email');
+                return false;
+            }
+            if (!phone) {
+                alert('Harap masukkan nomor telepon');
+                return false;
+            }
+            
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Format email tidak valid');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Event Listeners for Navigation Buttons
+        const nextStep1Btn = document.getElementById('next-step-1');
+        if (nextStep1Btn) {
+            nextStep1Btn.addEventListener('click', function() {
+                console.log('Next step 1 clicked');
+                if (validateStep1()) {
+                    goToStep(2);
+                }
+            });
+            console.log('Next step 1 button listener added');
+        } else {
+            console.error('Next step 1 button not found');
+        }
+        
+        const prevStep2Btn = document.getElementById('prev-step-2');
+        if (prevStep2Btn) {
+            prevStep2Btn.addEventListener('click', function() {
+                console.log('Previous step 2 clicked');
                 goToStep(1);
             });
-            
-            document.getElementById('next-step-2').addEventListener('click', function() {
-                // Basic validation for step 2
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const phone = document.getElementById('phone').value;
-                
-                if (!name || !email || !phone) {
-                    alert('Harap lengkapi semua detail pengunjung');
-                    return;
+        }
+        
+        const nextStep2Btn = document.getElementById('next-step-2');
+        if (nextStep2Btn) {
+            nextStep2Btn.addEventListener('click', function() {
+                console.log('Next step 2 clicked');
+                if (validateStep2()) {
+                    goToStep(3);
                 }
-                
-                goToStep(3);
             });
-            
-            document.getElementById('prev-step-3').addEventListener('click', function() {
+        }
+        
+        const prevStep3Btn = document.getElementById('prev-step-3');
+        if (prevStep3Btn) {
+            prevStep3Btn.addEventListener('click', function() {
+                console.log('Previous step 3 clicked');
                 goToStep(2);
             });
-            
-            // Apply promo code
-            document.getElementById('apply-promo').addEventListener('click', function() {
-                const promoCode = document.getElementById('kode_promo').value;
+        }
+        
+        // Apply promo code
+        const applyPromoBtn = document.getElementById('apply-promo');
+        if (applyPromoBtn) {
+            applyPromoBtn.addEventListener('click', function() {
+                const promoCode = document.getElementById('kode_promo').value.trim();
                 if (promoCode) {
                     alert(`Kode promo ${promoCode} diterapkan!`);
-                    // Here you would typically validate the promo code with your backend
+                    console.log('Promo code applied:', promoCode);
+                } else {
+                    alert('Harap masukkan kode promo');
                 }
             });
-            
-            // Pay now button
-            document.getElementById('pay-now').addEventListener('click', function() {
-                if (!document.getElementById('terms').checked) {
+        }
+        
+        // Pay now button
+        const payNowBtn = document.getElementById('pay-now');
+        if (payNowBtn) {
+            payNowBtn.addEventListener('click', function() {
+                const termsChecked = document.getElementById('terms').checked;
+                if (!termsChecked) {
                     alert('Anda harus menyetujui syarat dan ketentuan');
                     return;
                 }
                 alert('Pembayaran diproses!');
-                // Here you would typically process the payment
+                console.log('Payment processing...');
             });
+        }
+        
+        // Update order summary
+        function updateOrderSummary() {
+            console.log('Updating order summary');
             
-            // Update order summary
-            function updateOrderSummary() {
-                // Get values from form
-                const date = document.getElementById('tanggal_kunjungan').value;
-                const time = document.getElementById('waktu_kunjungan').value;
-                const visitors = document.getElementById('jumlah_pengunjung').value;
-                const promoCode = document.getElementById('kode_promo').value;
-                
-                // Format date
-                const formattedDate = date ? new Date(date).toLocaleDateString('id-ID', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                }) : '-';
-                
-                // Format time
-                let formattedTime = '-';
-                if (time === '08:00') formattedTime = '08:00 - 10:00';
-                else if (time === '10:00') formattedTime = '10:00 - 12:00';
-                else if (time === '13:00') formattedTime = '13:00 - 15:00';
-                else if (time === '15:00') formattedTime = '15:00 - 17:00';
-                
-                // Calculate total
-                const pricePerPerson = 25000;
-                const total = visitors ? visitors * pricePerPerson : 0;
-                
-                // Apply discount if promo code exists (demo only)
-                let discount = 0;
-                if (promoCode) {
-                    discount = total * 0.1; // 10% discount for demo
-                }
-                
-                // Update summary
-                document.getElementById('summary-date').textContent = formattedDate;
-                document.getElementById('summary-time').textContent = formattedTime;
-                document.getElementById('summary-visitors').textContent = visitors || '0';
-                document.getElementById('summary-discount').textContent = `Rp ${discount.toLocaleString('id-ID')}`;
-                document.getElementById('summary-total').textContent = `Rp ${(total - discount).toLocaleString('id-ID')}`;
-                
-                // Show/hide promo section
-                document.getElementById('promo-section').classList.toggle('hidden', discount === 0);
+            // Get values from form
+            const dateInput = document.getElementById('tanggal_kunjungan');
+            let formattedDate = '-';
+            
+            if (dateInput && dateInput.value) {
+                formattedDate = dateInput.dataset.formatted || 
+                               dateInput.value.split('-').reverse().join('/');
             }
             
-            // Initialize first step
-            goToStep(1);
-        });
-    </script>
-    @endpush
+            const timeValue = document.getElementById('waktu_kunjungan').value;
+            const visitors = document.getElementById('jumlah_pengunjung').value;
+            const promoCode = document.getElementById('kode_promo').value.trim();
+            
+            // Format time
+            let formattedTime = '-';
+            const timeOptions = {
+                '08:00': '08:00 - 10:00',
+                '10:00': '10:00 - 12:00',
+                '13:00': '13:00 - 15:00',
+                '15:00': '15:00 - 17:00'
+            };
+            formattedTime = timeOptions[timeValue] || '-';
+            
+            // Calculate total
+            const pricePerPerson = 25000;
+            const total = visitors ? parseInt(visitors) * pricePerPerson : 0;
+            
+            // Apply discount if promo code exists (demo only)
+            let discount = 0;
+            if (promoCode) {
+                discount = Math.floor(total * 0.1); // 10% discount for demo
+            }
+            
+            // Update summary elements
+            const summaryElements = {
+                'summary-date': formattedDate,
+                'summary-time': formattedTime,
+                'summary-visitors': visitors || '0',
+                'summary-discount': `Rp ${discount.toLocaleString('id-ID')}`,
+                'summary-total': `Rp ${(total - discount).toLocaleString('id-ID')}`
+            };
+            
+            Object.entries(summaryElements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = value;
+                }
+            });
+            
+            // Show/hide promo section
+            const promoSection = document.getElementById('promo-section');
+            if (promoSection) {
+                if (discount > 0) {
+                    promoSection.classList.remove('hidden');
+                } else {
+                    promoSection.classList.add('hidden');
+                }
+            }
+            
+            console.log('Order summary updated:', {formattedDate, formattedTime, visitors, discount, total});
+        }
+        
+        // Initialize first step
+        console.log('Initializing step 1');
+        goToStep(1);
+        
+        console.log('All event listeners setup complete');
+    });
+</script>
+@endpush
 </x-app-layout>

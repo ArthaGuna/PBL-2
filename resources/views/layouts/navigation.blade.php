@@ -156,9 +156,9 @@
                             x-transition:leave-end="opacity-0 scale-95"
                             class="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                             <div class="py-1">
-                                <x-dropdown-link href="{{ route('parkir') }}" :active="request()->routeIs('parkir')">
+                                {{-- <x-dropdown-link href="{{ route('parkir') }}" :active="request()->routeIs('parkir')">
                                     {{ __('Lahan Parkir') }}
-                                </x-dropdown-link>
+                                </x-dropdown-link> --}}
                                 <x-dropdown-link href="{{ route('gazebo') }}" :active="request()->routeIs('gazebo')">
                                     {{ __('Gazebo') }}
                                 </x-dropdown-link>

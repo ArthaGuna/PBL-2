@@ -55,11 +55,11 @@ class UserResource extends Resource
                             ->maxLength(255)
                             ->disabled(),
 
-                        TextInput::make('alamat')
-                            ->label('Alamat')
-                            ->required()
-                            ->maxLength(255)
-                            ->disabled(),
+                        // TextInput::make('alamat')
+                        //     ->label('Alamat')
+                        //     ->required()
+                        //     ->maxLength(255)
+                        //     ->disabled(),
 
                         TextInput::make('role')
                             ->label('Role')
@@ -80,7 +80,7 @@ class UserResource extends Resource
 
                 TextColumn::make('email'),
                 TextColumn::make('phone'),
-                TextColumn::make('alamat'),
+                // TextColumn::make('alamat'),
                 TextColumn::make('created_at'),
 
             ])

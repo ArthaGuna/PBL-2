@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\GaleriFotoController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,9 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('about');
 })->name('about');
+
+// Chatbot
+Route::post('/chatbot', [ChatbotController::class, 'handle']);
 
 // Galeri Foto
 Route::get('/galeri/foto', function () {

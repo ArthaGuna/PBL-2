@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\GaleriFotoController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\ChatBox;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,8 +19,6 @@ Route::get('/about', function () {
     return view('about');
 })->name('about');
 
-// Chatbot
-Route::post('/chatbot', [ChatbotController::class, 'handle']);
 
 // Galeri Foto
 Route::get('/galeri/foto', function () {

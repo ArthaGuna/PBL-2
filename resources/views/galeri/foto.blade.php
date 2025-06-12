@@ -14,4 +14,22 @@
     <div class="py-8 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         @livewire('galeri-foto-page')
     </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('keydown', function(event) {
+                // Tutup modal dengan ESC
+                if (event.key === 'Escape') {
+                    Livewire.emit('tutupModal');
+                }
+                
+                // Navigasi dengan panah kiri/kanan
+                if (event.key === 'ArrowLeft') {
+                    Livewire.emit('fotoSebelumnya');
+                } else if (event.key === 'ArrowRight') {
+                    Livewire.emit('fotoBerikutnya');
+                }
+            });
+        </script>
+    @endpush
 </x-app-layout>

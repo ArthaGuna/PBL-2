@@ -1,7 +1,7 @@
 <div class="fixed bottom-0 right-0 mb-4 mr-4 z-50">
     <!-- Chat Toggle Button -->
     <button wire:click="toggleChat" id="chat-toggle"
-        class="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition flex items-center justify-center h-12 w-12">
+        class="bg-blue-600 text-white p-1 rounded-full shadow-lg hover:bg-blue-700 transition flex items-center justify-center h-12 w-12">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -77,8 +77,8 @@
                     <div class="mb-4">
                         <div class="flex justify-start">
                             <div class="bg-gray-100 text-gray-800 rounded-lg py-2 px-3 max-w-xs lg:max-w-md">
-                                {{ $item['a'] }}
-                            </div>
+                            {!! $item['a'] !!}
+                        </div>
                         </div>
                         <div class="flex justify-start mt-1">
                             <span class="text-xs text-gray-500">ESPA AI</span>

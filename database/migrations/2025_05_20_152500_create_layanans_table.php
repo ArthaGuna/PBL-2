@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama_layanan');
             $table->text('deskripsi');
             $table->string('gambar');
-            $table->decimal('harga', 12, 2);
+            $table->decimal('harga', 12, 0);
             $table->integer('durasi')->nullable()->comment('dalam menit');
             $table->boolean('status')->default(true);
             $table->timestamps();

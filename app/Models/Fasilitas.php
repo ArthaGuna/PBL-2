@@ -14,7 +14,6 @@ class Fasilitas extends Model
     protected $fillable = [
         'nama_fasilitas',
         'deskripsi',
-        'icon',
         'gambar',
         'is_featured',
         'status',

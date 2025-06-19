@@ -19,10 +19,11 @@ class GaleriFotoPage extends Component
         $categories = [
             'Semua' => 'Semua',
             'kolam-air-panas' => 'Kolam Air Panas',
-            'jacuzzi' => 'Jacuzzi',
-            'ho-river' => 'Ho River',
-            'restaurant' => 'Restaurant',
-            'penginapan' => 'Penginapan',
+                'jacuzzi' => 'Jacuzzi',
+                'ho-river' => 'Ho River',
+                'gazebo' => 'Gazebo',
+                'parkir' => 'Lahan Parkir',
+                'kantin' => 'Kantin'
         ];
 
         $fotos = GaleriFoto::query()

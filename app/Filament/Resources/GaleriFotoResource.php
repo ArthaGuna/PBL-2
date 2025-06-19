@@ -55,8 +55,10 @@ class GaleriFotoResource extends Resource
                                 'kolam-air-panas' => 'Kolam Air Panas',
                                 'jacuzzi' => 'Jacuzzi',
                                 'ho-river' => 'Ho River',
-                                'restaurant' => 'Restaurant',
-                                'penginapan' => 'Penginapan',
+                                'gazebo' => 'Gazebo',
+                                'parkir' => 'Lahan Parkir',
+                                'kantin' => 'Kantin'
+
                             ])
                             ->required(),
 

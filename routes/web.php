@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\LayananController;
+use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\GaleriFotoController;
 use App\Http\Controllers\ProfileController;
@@ -32,26 +34,12 @@ Route::get('/galeri/video', function () {
 })->name('galeri.video');
 
 // Layanan
-Route::get('/airpanas', function () {
-    return view('layanan.airpanas');
-})->name('airpanas');
-
-Route::get('/jacuzzi', function () {
-    return view('layanan.jacuzzi');
-})->name('jacuzzi');
-
-Route::get('/river', function () {
-    return view('layanan.river');
-})->name('river');
+Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
+Route::get('/layanan/{id}', [LayananController::class, 'show'])->name('layanan.show');
 
 // Fasilitas
-Route::get('/parkir', function () {
-    return view('fasilitas.parkir');
-})->name('parkir');
-
-Route::get('/gazebo', function () {
-    return view('fasilitas.gazebo');
-})->name('gazebo');
+Route::get('/fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
+Route::get('/fasilitas/{id}', [FasilitasController::class, 'show'])->name('fasilitas.show');
 
 // Logout Admin 
 Route::post('/admin/logout', function () {

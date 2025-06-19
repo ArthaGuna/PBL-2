@@ -100,10 +100,10 @@
                             x-transition:leave-end="opacity-0 scale-95"
                             class="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                                 <div class="py-1">
-                                    <x-dropdown-link href="{{ route('galeri.foto') }}" :active="request()->routeIs('foto')">
+                                    <x-dropdown-link href="{{ route('galeri.foto') }}" :active="request()->routeIs('galeri.foto')">
                                         {{ __('Galeri Foto') }}
                                     </x-dropdown-link>
-                                    <x-dropdown-link href="{{ route('galeri.video') }}" :active="request()->routeIs('video')">
+                                    <x-dropdown-link href="{{ route('galeri.video') }}" :active="request()->routeIs('galeri.video')">
                                         {{ __('Galeri Video') }}
                                     </x-dropdown-link>
                                 </div>
@@ -128,17 +128,20 @@
                             x-transition:leave-end="opacity-0 scale-95"
                             class="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                             <div class="py-1">
-                                <x-dropdown-link href="{{ route('airpanas') }}" :active="request()->routeIs('airpanas')">
-                                        {{ __('Air Panas') }}
+                                @forelse(App\Models\Layanan::where('status', true)->get() as $layanan)
+                                    <x-dropdown-link href="{{ route('layanan.show', $layanan->id) }}">
+                                        {{ $layanan->nama_layanan }}
                                     </x-dropdown-link>
-                                <x-dropdown-link href="{{ route('jacuzzi') }}" :active="request()->routeIs('jacuzzi')">
-                                        {{ __('Jacuzzi') }}
-                                </x-dropdown-link>
+                                @empty
+                                    <x-dropdown-link href="#">
+                                        Belum ada layanan
+                                    </x-dropdown-link>
+                                @endforelse
                             </div>
                         </div>
                     </div>
 
-                    <!-- Layanan Fasilitas -->
+                    <!-- Fasilitas Dropdown -->
                     <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                         <button @click="open = !open" class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition duration-200">
                             {{ __('Fasilitas') }}
@@ -156,17 +159,18 @@
                             x-transition:leave-end="opacity-0 scale-95"
                             class="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                             <div class="py-1">
-                                {{-- <x-dropdown-link href="{{ route('parkir') }}" :active="request()->routeIs('parkir')">
-                                    {{ __('Lahan Parkir') }}
-                                </x-dropdown-link> --}}
-                                <x-dropdown-link href="{{ route('gazebo') }}" :active="request()->routeIs('gazebo')">
-                                    {{ __('Gazebo') }}
-                                </x-dropdown-link>
+                                @forelse(App\Models\Fasilitas::where('status', true)->get() as $fasilitas)
+                                    <x-dropdown-link href="{{ route('fasilitas.show', $fasilitas->id) }}">
+                                        {{ $fasilitas->nama_fasilitas }}
+                                    </x-dropdown-link>
+                                @empty
+                                    <x-dropdown-link href="#">
+                                        Belum ada fasilitas
+                                    </x-dropdown-link>
+                                @endforelse
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
             <div class="flex items-center">
             
@@ -258,10 +262,10 @@
                     </svg>
                 </button>
                 <div x-show="open" x-transition class="pl-4">
-                    <x-responsive-nav-link href="{{ route('galeri.foto') }}" :active="request()->routeIs('foto')">
+                    <x-responsive-nav-link href="{{ route('galeri.foto') }}" :active="request()->routeIs('galeri.foto')">
                         {{ __('Galeri Foto') }}
                     </x-responsive-nav-link>
-                    <x-responsive-nav-link href="{{ route('galeri.video') }}" :active="request()->routeIs('video')">
+                    <x-responsive-nav-link href="{{ route('galeri.video') }}" :active="request()->routeIs('galeri.video')">
                         {{ __('Galeri Video') }}
                     </x-responsive-nav-link>
                 </div>
@@ -276,12 +280,15 @@
                     </svg>
                 </button>
                 <div x-show="open" x-transition class="pl-4">
-                    <x-dropdown-link href="{{ route('airpanas') }}" :active="request()->routeIs('airpanas')">
-                        {{ __('Air Panas') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link href="{{ route('jacuzzi') }}" :active="request()->routeIs('jacuzzi')">
-                        {{ __('Jacuzzi') }}
-                    </x-dropdown-link>
+                    @forelse(App\Models\Layanan::where('status', true)->get() as $layanan)
+                        <x-responsive-nav-link href="{{ route('layanan.show', $layanan->id) }}">
+                            {{ $layanan->nama_layanan }}
+                        </x-responsive-nav-link>
+                    @empty
+                        <x-responsive-nav-link href="#">
+                            Belum ada layanan
+                        </x-responsive-nav-link>
+                    @endforelse
                 </div>
             </div>
 
@@ -294,12 +301,15 @@
                     </svg>
                 </button>
                 <div x-show="open" x-transition class="pl-4">
-                    <x-dropdown-link href="{{ route('parkir') }}" :active="request()->routeIs('parkir')">
-                        {{ __('Lahan Parkir') }}
-                    </x-dropdown-link>
-                    <x-dropdown-link href="{{ route('gazebo') }}" :active="request()->routeIs('gazebo')">
-                        {{ __('Gazebo') }}
-                    </x-dropdown-link>
+                    @forelse(App\Models\Fasilitas::where('status', true)->get() as $fasilitas)
+                        <x-responsive-nav-link href="{{ route('fasilitas.show', $fasilitas->id) }}">
+                            {{ $fasilitas->nama_fasilitas }}
+                        </x-responsive-nav-link>
+                    @empty
+                        <x-responsive-nav-link href="#">
+                            Belum ada fasilitas
+                        </x-responsive-nav-link>
+                    @endforelse
                 </div>
             </div>
 

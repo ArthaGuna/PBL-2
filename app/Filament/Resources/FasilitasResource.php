@@ -45,9 +45,11 @@ class FasilitasResource extends Resource
         return $form
             ->schema([
                 Section::make('Data Fasilitas')
+                    ->description('Isi informasi lengkap mengenai fasilitas yang tersedia, termasuk nama, deskripsi, status, dan gambar fasilitas yang akan ditampilkan kepada pengunjung.')
                     ->schema([
                         Grid::make(2)
                             ->schema([
+                                // Kolom Kiri
                                 Forms\Components\Group::make()
                                     ->schema([
                                         TextInput::make('nama_fasilitas')
@@ -59,6 +61,18 @@ class FasilitasResource extends Resource
                                             ->label('Deskripsi')
                                             ->required()
                                             ->rows(6),
+                                    ])
+                                    ->columnSpan(1),
+
+                                // Kolom Kanan
+                                Forms\Components\Group::make()
+                                    ->schema([
+                                        FileUpload::make('gambar')
+                                            ->label('Gambar Fasilitas')
+                                            ->image()
+                                            ->directory('fasilitas-images')
+                                            ->imagePreviewHeight('200')
+                                            ->required(),
 
                                         Toggle::make('is_featured')
                                             ->label('Tampilkan sebagai Fasilitas Unggulan')
@@ -67,18 +81,13 @@ class FasilitasResource extends Resource
                                         Toggle::make('status')
                                             ->label('Aktifkan Fasilitas')
                                             ->default(true),
-                                    ]),
-                                
-                                FileUpload::make('gambar')
-                                    ->label('Gambar Fasilitas')
-                                    ->image()
-                                    ->directory('fasilitas-images')
-                                    ->imagePreviewHeight('200')
-                                    ->required(),
+                                    ])
+                                    ->columnSpan(1),
                             ]),
                     ]),
             ]);
     }
+
 
     public static function table(Table $table): Table
     {

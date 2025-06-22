@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('judul');
             $table->string('slug')->unique();
-            $table->text('deskripsi');
-            $table->string('gambar_utama')->nullable();
             $table->string('jam_buka')->nullable();
-            $table->string('alamat')->nullable();
+            $table->string('logo')->nullable();
+            $table->string('gambar_utama')->nullable();
+            $table->text('tentang_kami')->nullable();
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+            $table->string('maps_url')->nullable();
             $table->timestamps();
         });
     }

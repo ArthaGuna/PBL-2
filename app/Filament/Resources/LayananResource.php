@@ -8,8 +8,11 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Section;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -42,11 +45,12 @@ class LayananResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Informasi Layanan')
+                Section::make('Informasi Layanan')
+                    ->description('Lengkapi detail layanan yang ditawarkan kepada pengunjung, termasuk nama, deskripsi, harga, durasi, dan status layanan.')
                     ->schema([
-                        Forms\Components\Grid::make(2)
+                        Grid::make(2)
                             ->schema([
-                                Forms\Components\Group::make()
+                                Group::make()
                                     ->schema([
                                         TextInput::make('nama_layanan')
                                             ->label('Nama Layanan')
@@ -56,15 +60,30 @@ class LayananResource extends Resource
                                         Textarea::make('deskripsi')
                                             ->label('Deskripsi')
                                             ->required()
-                                            ->rows(8)
+                                            ->rows(6)
                                             ->maxLength(65535),
+
+                                        Toggle::make('status')
+                                            ->label('Aktifkan layanan')
+                                            ->default(true),
+                                    ])
+                                    ->columnSpan(1),
+
+                                Group::make()
+                                    ->schema([
+                                        FileUpload::make('gambar')
+                                            ->label('Gambar Layanan')
+                                            ->image()
+                                            ->imagePreviewHeight('250')
+                                            ->directory('layanan-images')
+                                            ->required(),
 
                                         TextInput::make('harga')
                                             ->label('Harga')
                                             ->required()
                                             ->prefix('Rp')
-                                            ->formatStateUsing(fn ($state) => $state ? 'Rp ' . number_format($state, 0, ',', '.') : null)
-                                            ->dehydrateStateUsing(fn ($state) => (int) str_replace(['Rp', '.', ' '], '', $state))
+                                            ->formatStateUsing(fn($state) => $state ? 'Rp ' . number_format($state, 0, ',', '.') : null)
+                                            ->dehydrateStateUsing(fn($state) => (int) str_replace(['Rp', '.', ' '], '', $state))
                                             ->numeric(),
 
                                         TextInput::make('durasi')
@@ -72,17 +91,8 @@ class LayananResource extends Resource
                                             ->numeric()
                                             ->required(),
 
-                                        Toggle::make('status')
-                                            ->label('Aktifkan layanan')
-                                            ->default(true),
-                                    ]),
-
-                                FileUpload::make('gambar')
-                                    ->image()
-                                    ->label('Gambar Layanan')
-                                    ->directory('layanan-images')
-                                    ->imagePreviewHeight('200')
-                                    ->required(),
+                                    ])
+                                    ->columnSpan(1),
                             ]),
                     ]),
             ]);
@@ -96,22 +106,20 @@ class LayananResource extends Resource
                     ->label('Gambar'),
 
                 TextColumn::make('nama_layanan')
+                    ->label('Nama Layanan')
                     ->searchable()
                     ->sortable(),
-                
+
                 TextColumn::make('harga')
                     ->label('Harga')
-                    ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.')),
-                
+                    ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.')),
+
                 TextColumn::make('durasi')
                     ->label('Durasi (menit)'),
-                
+
                 IconColumn::make('status')
-                    ->boolean()
-                    ->label('Status'),
-            ])
-            ->filters([
-                //
+                    ->label('Status')
+                    ->boolean(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

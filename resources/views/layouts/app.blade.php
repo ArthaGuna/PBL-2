@@ -21,7 +21,7 @@
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-white">
         @include('layouts.navigation')
-        @livewire('chat-bot')
+        @livewire('chat-bot-fitur')
 
         <!-- Page Heading -->
         @isset($header)

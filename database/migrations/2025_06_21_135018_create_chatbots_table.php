@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sliders', function (Blueprint $table) {
+        Schema::create('chatbots', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');
-            $table->string('gambar');
-            $table->string('url_button')->nullable();
-            $table->integer('urutan')->default(0);
-            $table->boolean('status')->default(true);
+            $table->json('keyword');
+            $table->text('answer');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sliders');
+        Schema::dropIfExists('chatbots');
     }
 };

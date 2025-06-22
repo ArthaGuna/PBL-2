@@ -15,10 +15,13 @@ class Informasi extends Model
     protected $fillable = [
         'judul',
         'slug',
-        'deskripsi',
-        'gambar_utama',
         'jam_buka',
-        'alamat'
+        'logo',
+        'gambar_utama',
+        'tentang_kami',
+        'latitude',
+        'longitude',
+        'maps_url',
     ];
 
     /**
@@ -38,6 +41,10 @@ class Informasi extends Model
 
                 while (static::where('slug', $informasi->slug)->where('id', '<>', $informasi->id)->exists()) {
                     $informasi->slug = $originalSlug . '-' . $count++;
+                }
+
+                if ($informasi->latitude && $informasi->longitude) {
+                    $informasi->maps_url = "https://www.google.com/maps?q={$informasi->latitude},{$informasi->longitude}";
                 }
             }
         });

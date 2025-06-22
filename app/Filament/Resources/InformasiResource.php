@@ -5,40 +5,28 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\InformasiResource\Pages;
 use App\Models\Informasi;
 use Filament\Forms;
-use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+
+use Dotswan\MapPicker\Fields\Map as FieldsMap;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\MarkdownEditor;
 
 class InformasiResource extends Resource
 {
     protected static ?string $model = Informasi::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-information-circle';
-
-    public static function getModelLabel(): string
-    {
-        return 'Informasi';
-    }
-
-    public static function getSlug(): string
-    {
-        return 'informasi';
-    }
-
-    public static function getPluralModelLabel(): string
-    {
-        return 'Informasi';
-    }
 
     public static function getNavigationLabel(): string
     {
@@ -55,6 +43,7 @@ class InformasiResource extends Resource
         return $form
             ->schema([
                 Section::make('Informasi Utama')
+                    ->description('Masukkan informasi umum mengenai tempat wisata.')
                     ->schema([
                         TextInput::make('judul')
                             ->required()
@@ -70,51 +59,109 @@ class InformasiResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->disabled(),
 
-                        FileUpload::make('gambar_utama')
-                            ->label('Gambar Utama')
-                            ->image()
-                            ->directory('informasi-images')
-                            ->maxSize(2048)
-                            ->getUploadedFileNameForStorageUsing(
-                                fn(TemporaryUploadedFile $file): string =>
-                                (string) str($file->getClientOriginalName())->prepend('informasi-'),
-                            ),
-                    ])->columns(1),
-
-                Section::make('Konten')
-                    ->schema([
                         TextInput::make('jam_buka')
                             ->label('Jam Buka')
                             ->placeholder('08.00 - 18.00')
                             ->maxLength(255),
 
-                        TextInput::make('alamat')
-                            ->label('Alamat')
-                            ->maxLength(255),
+                    ])->columns(1),
 
-                        RichEditor::make('deskripsi')
+                Section::make('Konten')
+                    ->description('Unggah logo dan gambar utama, serta deskripsikan tentang tempat ini.')
+                    ->schema([
+                        FileUpload::make('logo')
+                            ->label('Logo')
+                            ->image()
+                            ->directory('informasi-images')
+                            ->preserveFilenames()
+                            ->imageEditor()
+                            ->maxSize(2048)
+                            ->columnSpanFull(),
+
+                        FileUpload::make('gambar_utama')
+                            ->label('Gambar Utama')
+                            ->image()
+                            ->directory('informasi-images')
+                            ->preserveFilenames()
+                            ->imageEditor()
+                            ->maxSize(2048)
+                            ->columnSpanFull(),
+
+                        MarkdownEditor::make('tentang_kami')
+                            ->label('Tentang Kami')
                             ->required(),
                     ])->columns(1),
 
                 Section::make('Harga Tiket')
+                    ->description('Tambahkan kategori dan harga tiket yang berlaku.')
                     ->schema([
                         Repeater::make('tiket')
                             ->relationship()
                             ->label('Daftar Harga')
                             ->schema([
-                                TextInput::make('kategori')
-                                    ->label('Kategori')
-                                    ->required(),
-
-                                TextInput::make('harga')
-                                    ->label('Harga (Rp)')
-                                    ->numeric()
-                                    ->required(),
+                                TextInput::make('kategori')->label('Kategori')->required(),
+                                TextInput::make('harga')->label('Harga (Rp)')->numeric()->required(),
                             ])
                             ->defaultItems(1)
                             ->addActionLabel('Tambah Kategori')
                             ->columns(2),
                     ]),
+
+                Section::make('Lokasi')
+                    ->description('Tentukan lokasi tempat wisata dengan memanfaatkan peta.')
+                    ->schema([
+                        Grid::make(2)->schema([
+                            TextInput::make('latitude')
+                                ->label('Latitude')
+                                ->required()
+                                ->readOnly(),
+
+                            TextInput::make('longitude')
+                                ->label('Longitude')
+                                ->required()
+                                ->readOnly()
+
+                        ]),
+                        TextInput::make('maps_url')
+                            ->label('Link Google Maps')
+                            ->readOnly()
+                            ->helperText('Otomatis diisi dari lokasi yang dipilih'),
+
+                        FieldsMap::make('lokasi')
+                            ->label('Pilih Lokasi')
+                            ->columnSpanFull()
+                            ->defaultLocation(-8.499825, 115.117718) // Yeh Panes Penatahan
+                            ->draggable(true)
+                            ->showMarker(true)
+                            ->zoom(15)
+                            ->extraStyles([
+                                'min-height: 60vh',
+                            ])
+                            ->afterStateUpdated(function ($set, ?array $state) {
+                                if ($state) {
+                                    $set('latitude', $state['lat']);
+                                    $set('longitude', $state['lng']);
+                                    $set('maps_url', 'https://www.google.com/maps?q=' . $state['lat'] . ',' . $state['lng']);
+                                }
+                            })
+                            ->afterStateHydrated(function ($state, $record, $set) {
+                                if ($record) {
+                                    $set('lokasi', [
+                                        'lat' => $record->latitude,
+                                        'lng' => $record->longitude,
+                                    ]);
+                                } else {
+                                    // Default location jika tidak ada data (saat create)
+                                    $set('latitude', -8.499825);
+                                    $set('longitude', 115.117718);
+                                    $set('maps_url', 'https://www.google.com/maps?q=-8.499825,115.117718');
+                                    $set('lokasi', [
+                                        'lat' => -8.499825,
+                                        'lng' => 115.117718,
+                                    ]);
+                                }
+                            }),
+                    ])
             ]);
     }
 
@@ -122,29 +169,13 @@ class InformasiResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('gambar_utama')->label('Gambar'),
                 TextColumn::make('judul')->searchable(),
                 TextColumn::make('jam_buka')->label('Jam Buka'),
-                TextColumn::make('alamat')->label('Alamat'),
-                // TextColumn::make('tiket')
-                //     ->label('Harga Tiket')
-                //     ->formatStateUsing(function ($record) {
-                //         return $record->tiket
-                //             ->map(fn($t) => "{$t->kategori}: Rp" . number_format($t->harga, 0, ',', '.'))
-                //             ->implode(', ');
-                //     })
-                //     ->wrap(),
                 TextColumn::make('created_at')->label('Dibuat Pada')->dateTime()->sortable(),
             ])
-            ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

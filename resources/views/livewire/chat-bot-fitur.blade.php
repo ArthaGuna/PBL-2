@@ -77,8 +77,8 @@
                     <div class="mb-4">
                         <div class="flex justify-start">
                             <div class="bg-gray-100 text-gray-800 rounded-lg py-2 px-3 max-w-xs lg:max-w-md">
-                            {!! $item['a'] !!}
-                        </div>
+                                {!! $item['a'] !!}
+                            </div>
                         </div>
                         <div class="flex justify-start mt-1">
                             <span class="text-xs text-gray-500">ESPA AI</span>

@@ -7,6 +7,7 @@ use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -32,11 +33,9 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-
-                Fieldset::make('Informasi Pengguna')
+                Section::make('Informasi Pengguna')
+                    ->description('Detail pengguna yang tersedia hanya untuk dilihat, tidak dapat diedit.')
                     ->schema([
-
-
                         TextInput::make('name')
                             ->label('Username')
                             ->required()
@@ -55,19 +54,12 @@ class UserResource extends Resource
                             ->maxLength(255)
                             ->disabled(),
 
-                        // TextInput::make('alamat')
-                        //     ->label('Alamat')
-                        //     ->required()
-                        //     ->maxLength(255)
-                        //     ->disabled(),
-
                         TextInput::make('role')
                             ->label('Role')
-                            ->formatStateUsing(fn(string $state): string => match ($state) {
-                                default => $state,
-                            })
+                            ->formatStateUsing(fn($state) => $state ? strtoupper($state) : '-')
                             ->disabled(),
-                    ]),
+                    ])
+                    ->columns(2),
             ]);
     }
 
@@ -75,25 +67,27 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID'),
+
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->label('Nama'),
 
-                TextColumn::make('email'),
-                TextColumn::make('phone'),
-                // TextColumn::make('alamat'),
-                TextColumn::make('created_at'),
+                TextColumn::make('email')
+                    ->label('Email'),
 
+                TextColumn::make('phone')
+                    ->label('Nomor Telepon'),
+
+                TextColumn::make('created_at')
+                    ->label('Dibuat Pada'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

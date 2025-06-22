@@ -6,9 +6,18 @@ use App\Filament\Resources\GaleriFotoResource\Pages;
 use App\Filament\Resources\GaleriFotoResource\RelationManagers;
 use App\Models\GaleriFoto;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -39,18 +48,19 @@ class GaleriFotoResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Informasi Foto')
+                Section::make('Informasi Foto')
+                    ->description('Masukkan detail foto seperti judul, kategori, dan deskripsi singkat.')
                     ->schema([
-                        Forms\Components\TextInput::make('judul')
+                        TextInput::make('judul')
                             ->required()
                             ->maxLength(255),
 
-                        // Forms\Components\TextInput::make('slug')
+                        // TextInput::make('slug')
                         //     ->maxLength(255)
                         //     ->disabled()
                         //     ->unique(ignoreRecord: true),
 
-                        Forms\Components\Select::make('kategori')
+                        Select::make('kategori')
                             ->options([
                                 'kolam-air-panas' => 'Kolam Air Panas',
                                 'jacuzzi' => 'Jacuzzi',
@@ -62,13 +72,14 @@ class GaleriFotoResource extends Resource
                             ])
                             ->required(),
 
-                        Forms\Components\Textarea::make('deskripsi')
+                        Textarea::make('deskripsi')
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                Forms\Components\Section::make('Foto')
+                Section::make('Foto')
+                    ->description('Unggah foto yang akan ditampilkan di galeri.')
                     ->schema([
-                        Forms\Components\FileUpload::make('path_foto')
+                        FileUpload::make('path_foto')
                             ->label('Foto')
                             ->image()
                             ->directory('galeri-foto')
@@ -77,17 +88,18 @@ class GaleriFotoResource extends Resource
                             ->columnSpanFull(),
                     ]),
 
-                Forms\Components\Section::make('Pengaturan')
+                Section::make('Pengaturan')
+                    ->description('Tentukan urutan dan status tampilan foto.')
                     ->schema([
-                        Forms\Components\Toggle::make('is_featured')
-                            ->label('Featured')
+                        Toggle::make('is_featured')
+                            ->label('Tampilkan')
                             ->default(false),
 
-                        Forms\Components\Toggle::make('status')
+                        Toggle::make('status')
                             ->label('Aktif')
                             ->default(true),
 
-                        Forms\Components\TextInput::make('urutan')
+                        TextInput::make('urutan')
                             ->numeric()
                             ->default(0),
                     ])->columns(2),
@@ -98,15 +110,15 @@ class GaleriFotoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('path_foto')
+                ImageColumn::make('path_foto')
                     ->label('Foto')
                     ->disk('public'),
 
-                Tables\Columns\TextColumn::make('judul')
+                TextColumn::make('judul')
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('kategori')
+                TextColumn::make('kategori')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'kolam-air-panas' => 'info',
@@ -117,14 +129,14 @@ class GaleriFotoResource extends Resource
                         default => 'secondary',
                     }),
 
-                Tables\Columns\IconColumn::make('is_featured')
+                IconColumn::make('is_featured')
                     ->label('Featured')
                     ->boolean(),
 
-                Tables\Columns\TextColumn::make('urutan')
+                TextColumn::make('urutan')
                     ->sortable(),
 
-                Tables\Columns\IconColumn::make('status')
+                IconColumn::make('status')
                     ->label('Aktif')
                     ->boolean(),
             ])

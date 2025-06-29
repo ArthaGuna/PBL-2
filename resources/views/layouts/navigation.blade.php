@@ -178,7 +178,7 @@
             @auth
                 <!-- Desktop BELI TIKET Button for Authenticated Users -->
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
-                    <a href="{{ route('booking') }}"
+                    <a href="{{ route('reservasi') }}"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 rounded-lg font-semibold text-xs text-white uppercase tracking-widest 
                             hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 transition ease-in-out duration-150">
                         {{ __('BELI TIKET') }}
@@ -317,7 +317,7 @@
             <div class="px-4 pt-2">
                 @auth
                     <!-- Mobile BELI TIKET Button for Authenticated Users -->
-                    <a href="{{ route('booking') }}" class="block w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest text-center hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <a href="{{ route('reservasi') }}" class="block w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest text-center hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition ease-in-out duration-150">
                         {{ __('BELI TIKET') }}
                     </a>
                 @else

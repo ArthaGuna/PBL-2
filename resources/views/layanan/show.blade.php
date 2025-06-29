@@ -40,7 +40,7 @@
                     <a href="{{ route('welcome') }}" class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition text-sm">
                         Kembali
                     </a>
-                    <a href="{{ route('booking') }}" class="px-4 py-2 bg-[#0288D1] text-white rounded hover:bg-[#0277BD] transition text-sm">
+                    <a href="{{ route('reservasi') }}" class="px-4 py-2 bg-[#0288D1] text-white rounded hover:bg-[#0277BD] transition text-sm">
                         Pesan Sekarang
                     </a>
                 </div>

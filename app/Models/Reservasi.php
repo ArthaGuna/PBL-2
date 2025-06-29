@@ -28,11 +28,12 @@ class Reservasi extends Model
         'midtrans_payment_type',
         'midtrans_transaction_status',
         'bukti_pembayaran',
+        'snap_token',
     ];
 
     protected $casts = [
         'tanggal_kunjungan' => 'date',
-        'waktu_kunjungan' => 'time',
+        
     ];
 
     public function user(): BelongsTo

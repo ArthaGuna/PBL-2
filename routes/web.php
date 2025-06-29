@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LayananController;
+use App\Http\Controllers\ReservasiController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\GaleriFotoController;
@@ -59,10 +60,28 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Route booking
-    Route::get('/booking', function () {
-        return view('auth.booking');
-    })->name('booking');
+    // Route reservasi
+    Route::get('/reservasi', function() {
+        return view('auth.reservasi');
+    })->name('reservasi');
+
+    Route::post('/reservasi/proses', [ReservasiController::class, 'process'])->name('reservasi.proses');
+    
+    // Route status pembayaran
+    Route::get('/reservasi/thankyou', function () {
+        return view('payment.thankyou');
+    })->name('reservasi.thankyou');
+    
+    Route::get('/reservasi/pending', function () {
+        return view('payment.pending');
+    })->name('reservasi.pending');
+    
+    Route::get('/reservasi/failed', function () {
+        return view('payment.failed');
+    })->name('reservasi.failed');
+    
+    // Handle notifikasi Midtrans
+    Route::post('/payment/notification', [ReservasiController::class, 'handleNotification']);
 });
 
 

@@ -16,16 +16,22 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Gambar -->
             <div class="mb-8 rounded-lg shadow-md overflow-hidden">
-                <img src="{{ asset('storage/' . $layanan->gambar) }}" alt="{{ $layanan->nama_layanan }}" class="w-full h-auto object-cover">
+                <img src="{{ asset('storage/' . $layanan->gambar) }}" alt="{{ $layanan->nama_layanan }}"
+                    class="w-full h-auto object-cover">
             </div>
 
             <!-- Konten -->
             <div class="bg-white rounded-lg p-8">
                 <h1 class="text-2xl font-bold text-gray-800 mb-4">{{ $layanan->nama_layanan }}</h1>
+                <div class="flex items-center mb-6 text-gray-700">
+                    <span class="font-medium mr-4">
+                        {{$layanan->tiket->kategori}}
+                    </span>
+                </div>
 
                 <div class="flex items-center mb-6 text-gray-700">
                     <span class="font-medium mr-4">
-                        Rp {{ number_format($layanan->harga, 0, ',', '.') }}
+                        Rp {{ number_format($layanan->tiket->harga, 0, ',', '.') }}
                     </span>
                     @if($layanan->durasi)
                         <span class="text-sm">• {{ $layanan->durasi }} menit</span>
@@ -37,12 +43,14 @@
                 </div>
 
                 <div class="flex justify-end space-x-4">
-                    <a href="{{ route('welcome') }}" class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition text-sm">
+                    <a href="{{ route('welcome') }}"
+                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition text-sm">
                         Kembali
                     </a>
-                    <a href="{{ route('booking') }}" class="px-4 py-2 bg-[#0288D1] text-white rounded hover:bg-[#0277BD] transition text-sm">
+                    {{-- <a href="{{ route('booking') }}"
+                        class="px-4 py-2 bg-[#0288D1] text-white rounded hover:bg-[#0277BD] transition text-sm">
                         Pesan Sekarang
-                    </a>
+                    </a> --}}
                 </div>
             </div>
         </div>

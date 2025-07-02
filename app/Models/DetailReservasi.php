@@ -18,6 +18,8 @@ class DetailReservasi extends Model
         'jumlah',
         'harga_satuan',
         'subtotal',
+        'mulai',
+        'selesai'
     ];
 
     public function reservasi(): BelongsTo

@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('informasi_tikets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('informasi_id')->constrained()->onDelete('cascade');
+            $table->foreignId('layanan_id')->constrained()->onDelete('cascade');
             $table->string('kategori'); // Contoh: Kolam Anak, Jacuzzi
             $table->integer('harga'); // dalam Rupiah
+            $table->integer('maks_pengunjung')->default(1);
             $table->timestamps();
         });
     }

@@ -92,21 +92,6 @@ class InformasiResource extends Resource
                             ->required(),
                     ])->columns(1),
 
-                Section::make('Harga Tiket')
-                    ->description('Tambahkan kategori dan harga tiket yang berlaku.')
-                    ->schema([
-                        Repeater::make('tiket')
-                            ->relationship()
-                            ->label('Daftar Harga')
-                            ->schema([
-                                TextInput::make('kategori')->label('Kategori')->required(),
-                                TextInput::make('harga')->label('Harga (Rp)')->numeric()->required(),
-                            ])
-                            ->defaultItems(1)
-                            ->addActionLabel('Tambah Kategori')
-                            ->columns(2),
-                    ]),
-
                 Section::make('Lokasi')
                     ->description('Tentukan lokasi tempat wisata dengan memanfaatkan peta.')
                     ->schema([

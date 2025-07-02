@@ -2,15 +2,10 @@
 
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\FasilitasController;
-use App\Http\Controllers\ChatbotController;
-use App\Http\Controllers\GaleriFotoController;
+use App\Http\Controllers\ReservasiController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,6 +17,12 @@ Route::get('/about', function () {
 
 // Chatbot
 // Route::post('/chatbot', [ChatbotController::class, 'handle']);
+
+// Midtrans webhook (jangan pakai middleware auth!)
+Route::post('/midtrans/notification', [ReservasiController::class, 'handleNotification'])
+    // Penting biar gak nerima token csrf 
+    ->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class)
+    ->name('midtrans.notification');
 
 // Galeri Foto
 Route::get('/galeri/foto', function () {
@@ -40,6 +41,21 @@ Route::get('/layanan/{id}', [LayananController::class, 'show'])->name('layanan.s
 // Fasilitas
 Route::get('/fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
 Route::get('/fasilitas/{id}', [FasilitasController::class, 'show'])->name('fasilitas.show');
+
+// Form reservasi
+Route::get('/reservasi', function () {
+    return view('auth.payment.reservasi'); // Ganti jika file blade-nya beda
+})->name('reservasi');
+
+Route::get('/reservasi', [ReservasiController::class, 'showForm'])->name('reservasi');
+
+// Proses reservasi dan Midtrans Snap
+Route::post('/reservasi/proses', [ReservasiController::class, 'proses'])->name('reservasi.proses');
+
+// Halaman redirect setelah sukses / gagal / pending
+Route::get('/reservasi/thank-you', [ReservasiController::class, 'thankYou'])->name('reservasi.thankyou');
+Route::get('/reservasi/failed', [ReservasiController::class, 'failed'])->name('reservasi.failed');
+Route::get('/reservasi/pending', [ReservasiController::class, 'pending'])->name('reservasi.pending');
 
 // Logout Admin 
 Route::post('/admin/logout', function () {

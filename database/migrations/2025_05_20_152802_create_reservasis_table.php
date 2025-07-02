@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('reservasis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('layanan_id')->constrained()->onDelete('cascade');
             $table->string('kode_booking')->unique();
+            $table->string('nama_pengunjung');
             $table->date('tanggal_kunjungan');
             $table->time('waktu_kunjungan');
             $table->integer('jumlah_pengunjung');
@@ -22,7 +24,8 @@ return new class extends Migration
             $table->decimal('diskon', 12, 2)->default(0);
             $table->decimal('total_bayar', 12, 2);
             $table->foreignId('promo_id')->nullable()->constrained('promos')->nullOnDelete();
-            $table->enum('status_pembayaran', ['pending', 'paid', 'cancelled', 'failed'])->default('pending');
+            $table->enum('status_pembayaran', ['pending', 'success', 'cancelled', 'failed'])->default('pending');
+            $table->boolean('stok_dikurangi')->default(false);
             $table->string('midtrans_transaction_id')->nullable();
             $table->string('midtrans_payment_type')->nullable();
             $table->string('midtrans_transaction_status')->nullable();

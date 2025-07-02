@@ -15,7 +15,9 @@ class Reservasi extends Model
 
     protected $fillable = [
         'user_id',
+        'layanan_id',
         'kode_booking',
+        'nama_pengunjung',
         'tanggal_kunjungan',
         'waktu_kunjungan',
         'jumlah_pengunjung',
@@ -24,6 +26,7 @@ class Reservasi extends Model
         'total_bayar',
         'promo_id',
         'status_pembayaran',
+        'stok_dikurangi',
         'midtrans_transaction_id',
         'midtrans_payment_type',
         'midtrans_transaction_status',
@@ -32,8 +35,26 @@ class Reservasi extends Model
 
     protected $casts = [
         'tanggal_kunjungan' => 'date',
-        'waktu_kunjungan' => 'time',
+        'stok_dikurangi' => 'boolean',
     ];
+
+    public function kurangiStokLayanan(): void
+    {
+        if (!$this->stok_dikurangi && $this->layanan) {
+            $this->layanan->kurangiStok(1);
+            $this->stok_dikurangi = true;
+            $this->save();
+        }
+    }
+
+    public function restoreStokLayanan(): void
+    {
+        if ($this->stok_dikurangi && $this->layanan) {
+            $this->layanan->tambahStok(1);
+            $this->stok_dikurangi = false;
+            $this->save();
+        }
+    }
 
     public function user(): BelongsTo
     {
@@ -43,6 +64,11 @@ class Reservasi extends Model
     public function promo(): BelongsTo
     {
         return $this->belongsTo(Promo::class);
+    }
+
+    public function layanan(): BelongsTo
+    {
+        return $this->belongsTo(Layanan::class);
     }
 
     public function detailReservasis(): HasMany

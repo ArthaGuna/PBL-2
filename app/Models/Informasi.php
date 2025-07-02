@@ -49,9 +49,4 @@ class Informasi extends Model
             }
         });
     }
-
-    public function tiket()
-    {
-        return $this->hasMany(InformasiTiket::class);
-    }
 }

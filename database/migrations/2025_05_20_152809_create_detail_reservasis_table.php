@@ -17,7 +17,9 @@ return new class extends Migration
             $table->foreignId('layanan_id')->constrained()->onDelete('cascade');
             $table->integer('jumlah');
             $table->decimal('harga_satuan', 12, 2);
-            $table->decimal('subtotal', 12, 2);
+            $table->decimal('subtotal', 12, places: 2);
+            $table->timestamp('mulai')->nullable();
+            $table->timestamp('selesai')->nullable();
             $table->timestamps();
         });
     }

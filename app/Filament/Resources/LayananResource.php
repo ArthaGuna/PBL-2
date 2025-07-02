@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\LayananResource\Pages;
 use App\Models\Layanan;
 use Filament\Forms;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -13,6 +14,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Repeater;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -46,7 +48,7 @@ class LayananResource extends Resource
         return $form
             ->schema([
                 Section::make('Informasi Layanan')
-                    ->description('Lengkapi detail layanan yang ditawarkan kepada pengunjung, termasuk nama, deskripsi, harga, durasi, dan status layanan.')
+                    ->description('Lengkapi detail layanan yang ditawarkan kepada pengunjung.')
                     ->schema([
                         Grid::make(2)
                             ->schema([
@@ -63,6 +65,14 @@ class LayananResource extends Resource
                                             ->rows(6)
                                             ->maxLength(65535),
 
+                                        TextInput::make('jumlah')
+                                            ->label('Jumlah Unit Tersedia')
+                                            ->required()
+                                            ->numeric()
+                                            ->minValue(0)
+                                            ->reactive()
+                                            ->afterStateUpdated(fn($set, $state) => $set('stok', $state)),
+
                                         Toggle::make('status')
                                             ->label('Aktifkan layanan')
                                             ->default(true),
@@ -78,23 +88,44 @@ class LayananResource extends Resource
                                             ->directory('layanan-images')
                                             ->required(),
 
-                                        TextInput::make('harga')
-                                            ->label('Harga')
-                                            ->required()
-                                            ->prefix('Rp')
-                                            ->formatStateUsing(fn($state) => $state ? 'Rp ' . number_format($state, 0, ',', '.') : null)
-                                            ->dehydrateStateUsing(fn($state) => (int) str_replace(['Rp', '.', ' '], '', $state))
-                                            ->numeric(),
-
                                         TextInput::make('durasi')
-                                            ->label('Durasi (menit)')
+                                            ->label('Durasi')
+                                            ->suffix('Menit')
                                             ->numeric()
                                             ->required(),
 
+                                        TextInput::make('stok')
+                                            ->label('Stok')
+                                            ->disabled()
+                                            ->dehydrated(true)
+                                            ->helperText('Otomatis mengikuti jumlah unit pada saat dibuat.'),
                                     ])
                                     ->columnSpan(1),
                             ]),
                     ]),
+
+                Section::make('Harga Tiket')
+                    ->description('Tambahkan kategori dan harga tiket untuk layanan ini.')
+                    ->schema([
+                        TextInput::make('kategori')
+                            ->label('Kategori')
+                            ->required(),
+
+                        TextInput::make('harga')
+                            ->label('Harga (Rp)')
+                            ->prefix('Rp')
+                            ->numeric()
+                            ->required(),
+
+                        TextInput::make('maks_pengunjung')
+                            ->label('Maksimal Pengunjung')
+                            ->numeric()
+                            ->minValue(1)
+                            ->default(1)
+                            ->required(),
+                    ])
+                    ->relationship('tiket')
+                    ->columns(3),
             ]);
     }
 
@@ -102,24 +133,12 @@ class LayananResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('gambar')
-                    ->label('Gambar'),
-
-                TextColumn::make('nama_layanan')
-                    ->label('Nama Layanan')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('harga')
-                    ->label('Harga')
-                    ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.')),
-
-                TextColumn::make('durasi')
-                    ->label('Durasi (menit)'),
-
-                IconColumn::make('status')
-                    ->label('Status')
-                    ->boolean(),
+                ImageColumn::make('gambar')->label('Gambar'),
+                TextColumn::make('nama_layanan')->label('Nama Layanan')->searchable()->sortable(),
+                TextColumn::make('jumlah')->label('Jumlah'),
+                TextColumn::make('stok')->label('Stok'),
+                TextColumn::make('durasi')->label('Durasi'),
+                IconColumn::make('status')->label('Status')->boolean(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

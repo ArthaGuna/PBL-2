@@ -13,9 +13,10 @@ class InformasiTiket extends Model
         'informasi_id',
         'kategori',
         'harga',
+        'maks_pengunjung',
     ];
 
-    public function informasi()
+    public function layanan()
     {
         return $this->belongsTo(Informasi::class);
     }

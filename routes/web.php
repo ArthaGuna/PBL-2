@@ -75,6 +75,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Route riwayat pembayaran
+    Route::get('/riwayat', function () {
+        return view('auth.payment.riwayat');
+    })->name('payment.riwayat');
+    
+    // Route detail pembayaran
+    Route::get('/detail', function () {
+        return view('auth.payment.detail');
+    })->name('payment.detail');
+
     // Route booking
     Route::get('/booking', function () {
         return view('auth.booking');

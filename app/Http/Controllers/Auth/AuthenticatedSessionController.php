@@ -30,6 +30,8 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::user()->role == 'admin') {
             return redirect('/admin'); // Ganti dengan route untuk halaman admin
+        } else if (Auth::user()->role == 'user') {
+            return redirect('/'); // Ganti dengan route untuk halaman user
         }
 
         // Jika bukan admin, arahkan ke halaman utama

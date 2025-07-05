@@ -16,18 +16,18 @@
                             alt="Slider Image">
                         @if ($slider->url_button)
                             <div class="absolute inset-0 bg-black/0 flex items-end justify-center px-4 pb-10">
-                                <a href="{{ $slider->url_button }}"
+                                {{-- <a href="{{ $slider->url_button }}"
                                     class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg font-semibold rounded-lg transition">
                                     Selengkapnya
-                                </a>
+                                </a> --}}
                             </div>
                         @endif
                     </div>
                 @endforeach
             </div>
             <div class="swiper-pagination"></div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+            {{-- <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div> --}}
         </div>
     </div>
 

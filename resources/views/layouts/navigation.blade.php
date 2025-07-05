@@ -230,7 +230,10 @@
                                         <x-dropdown-link :href="route('profile.edit')">
                                             {{ __('Edit Profil') }}
                                         </x-dropdown-link>
-
+                                        <x-dropdown-link :href="route('payment.riwayat')">
+                                            {{ __('Riwayat Pembayaran') }}
+                                        </x-dropdown-link>
+                                        
                                         <!-- Authentication -->
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf

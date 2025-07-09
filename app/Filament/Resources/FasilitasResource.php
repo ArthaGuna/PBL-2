@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Illuminate\Support\Str;
 use App\Filament\Resources\FasilitasResource\Pages;
 use App\Models\Fasilitas;
 use Filament\Forms;
@@ -55,7 +56,17 @@ class FasilitasResource extends Resource
                                         TextInput::make('nama_fasilitas')
                                             ->label('Nama Fasilitas')
                                             ->required()
-                                            ->maxLength(255),
+                                            ->maxLength(255)
+                                            ->reactive()
+                                            ->afterStateUpdated(function ($state, callable $set) {
+                                                $set('slug', Str::slug($state));
+                                            }),
+
+                                        TextInput::make('slug')
+                                            ->label('Slug')
+                                            ->required()
+                                            ->unique(Fasilitas::class, 'slug', ignoreRecord: true)
+                                            ->disabled(),
 
                                         Textarea::make('deskripsi')
                                             ->label('Deskripsi')

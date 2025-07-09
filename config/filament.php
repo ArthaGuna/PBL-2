@@ -86,4 +86,24 @@ return [
 
     'livewire_loading_delay' => 'default',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Middleware
+    |--------------------------------------------------------------------------
+    |
+    | You may customize the middleware used by Filament here, or add your own.
+    |
+    */
+
+    'middleware' => [
+        'auth' => [
+            \Illuminate\Auth\Middleware\Authenticate::class,
+            \App\Http\Middleware\RedirectIfNotAdmin::class,
+        ],
+        'base' => [
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+        ],
+    ],
 ];

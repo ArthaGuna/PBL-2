@@ -123,4 +123,19 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+        /*
+    |--------------------------------------------------------------------------
+    | Application Service Providers
+    |--------------------------------------------------------------------------
+    |
+    | Here you may list all of the service providers for your application.
+    | These service providers load automatically on the request to your
+    | application. Feel free to add your own services to this array.
+    |
+    */
+
+    // 'providers' => [
+    //     App\Providers\FilamentServiceProvider::class,
+    // ],
+
 ];

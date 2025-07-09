@@ -11,9 +11,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
+// Route::get('/about', function () {
+//     return view('about');
+// })->name('about');
 
 // Chatbot
 // Route::post('/chatbot', [ChatbotController::class, 'handle']);
@@ -34,13 +34,18 @@ Route::get('/galeri/video', function () {
     return view('galeri.video');
 })->name('galeri.video');
 
+
+Route::get('/tentang-kami', function () {
+    return view('about');
+})->name('about');
+
 // Layanan
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
-Route::get('/layanan/{id}', [LayananController::class, 'show'])->name('layanan.show');
+Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
 
 // Fasilitas
 Route::get('/fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
-Route::get('/fasilitas/{id}', [FasilitasController::class, 'show'])->name('fasilitas.show');
+Route::get('/fasilitas/{slug}', [FasilitasController::class, 'show'])->name('fasilitas.show');
 
 // Form reservasi
 Route::get('/reservasi', function () {
@@ -56,6 +61,9 @@ Route::post('/reservasi/proses', [ReservasiController::class, 'proses'])->name('
 Route::get('/reservasi/thank-you', [ReservasiController::class, 'thankYou'])->name('reservasi.thankyou');
 Route::get('/reservasi/failed', [ReservasiController::class, 'failed'])->name('reservasi.failed');
 Route::get('/reservasi/pending', [ReservasiController::class, 'pending'])->name('reservasi.pending');
+
+Route::get('/payment/riwayat', [ReservasiController::class, 'history'])->name('payment.riwayat');
+Route::get('/detail/{id}', [ReservasiController::class, 'detail'])->name('payment.detail');
 
 // Logout Admin 
 Route::post('/admin/logout', function () {
@@ -74,11 +82,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Route booking
-    Route::get('/booking', function () {
-        return view('auth.booking');
-    })->name('booking');
 });
 
 

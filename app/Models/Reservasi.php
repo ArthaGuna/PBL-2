@@ -70,9 +70,4 @@ class Reservasi extends Model
     {
         return $this->belongsTo(Layanan::class);
     }
-
-    public function detailReservasis(): HasMany
-    {
-        return $this->hasMany(DetailReservasi::class, 'reservasi_id');
-    }
 }

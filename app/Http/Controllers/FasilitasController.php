@@ -13,9 +13,9 @@ class FasilitasController extends Controller
         return view('fasilitas.index', compact('fasilitas'));
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        $fasilitas = Fasilitas::where('status', true)->findOrFail($id);
+        $fasilitas = Fasilitas::where('slug', $slug)->where('status', true)->firstOrFail();
         return view('fasilitas.show', compact('fasilitas'));
     }
 }

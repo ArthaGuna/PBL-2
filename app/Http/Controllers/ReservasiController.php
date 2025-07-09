@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservasi;
 use App\Models\Layanan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -51,6 +52,8 @@ class ReservasiController extends Controller
             \Midtrans\Config::$isProduction = config('midtrans.isProduction', false);
             \Midtrans\Config::$isSanitized = true;
             \Midtrans\Config::$is3ds = config('midtrans.is3ds', true);
+
+            // \Midtrans\Config::$curlOptions[CURLOPT_CAINFO] = 'D:/laragon/etc/ssl/cacert.pem';
 
             $params = [
                 'transaction_details' => [
@@ -101,7 +104,7 @@ class ReservasiController extends Controller
 
             $notif = new \Midtrans\Notification();
 
-            Log::info('Midtrans notification object:', (array) $notif);
+            // Log::info('Midtrans notification object:', (array) $notif);
 
             $transaction = $notif->transaction_status;
             $order_id = $notif->order_id;
@@ -167,5 +170,33 @@ class ReservasiController extends Controller
     public function failed()
     {
         return view('auth.payment.failed');
+    }
+
+    public function history(Request $request)
+    {
+        $query = Reservasi::where('user_id', Auth::id())->latest();
+
+        if ($request->has('status') && $request->status !== 'all') {
+            $query->where('status_pembayaran', $request->status);
+        }
+
+        if ($request->has('tanggal') && $request->tanggal) {
+            try {
+                $bulan = Carbon::createFromFormat('Y-m', $request->tanggal);
+                $query->whereMonth('tanggal_kunjungan', $bulan->month)
+                    ->whereYear('tanggal_kunjungan', $bulan->year);
+            } catch (\Exception $e) {
+                // Invalid format, skip filter
+            }
+        }
+
+        $reservasis = $query->get();
+
+        return view('auth.payment.riwayat', compact('reservasis'));
+    }
+    public function detail($id)
+    {
+        $reservasi = Reservasi::with('layanan')->where('user_id', Auth::id())->findOrFail($id);
+        return view('auth.payment.detail', compact('reservasi'));
     }
 }

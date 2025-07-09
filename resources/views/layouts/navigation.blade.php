@@ -38,8 +38,10 @@
         :class="scrolled ? 'h-0 opacity-0 overflow-hidden -translate-y-2' : 'h-10 opacity-100 translate-y-0'">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-end space-x-4">
             <!-- Social Media Links -->
-            <a href="https://www.instagram.com/yehpanaspenatahan/"
-                class="text-gray-600 hover:text-gray-900 transition-colors duration-200">
+            <!-- Social Media Links dari database -->
+            @if (!empty($sosmed['instagram']))
+            <a href="{{ $sosmed['instagram'] }}"
+                class="text-gray-600 hover:text-gray-900 transition-colors duration-200" target="_blank">
                 <span class="sr-only">Instagram</span>
                 <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path fill-rule="evenodd"
@@ -47,8 +49,11 @@
                         clip-rule="evenodd" />
                 </svg>
             </a>
-            <a href="https://www.facebook.com/yehpanespenatahan"
-                class="text-gray-600 hover:text-gray-900 transition-colors duration-200">
+            @endif
+
+            @if (!empty($sosmed['facebook']))
+            <a href="{{ $sosmed['facebook'] }}"
+                class="text-gray-600 hover:text-gray-900 transition-colors duration-200" target="_blank">
                 <span class="sr-only">Facebook</span>
                 <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path fill-rule="evenodd"
@@ -56,15 +61,21 @@
                         clip-rule="evenodd" />
                 </svg>
             </a>
+            @endif
+
             <span class="text-gray-600">|</span>
-            <a href="https://wa.me/6281237404325"
-                class="text-gray-600 hover:text-gray-900 flex items-center transition-colors duration-200">
+
+            @if (!empty($sosmed['wa']))
+            <a href="{{ $sosmed['wa'] }}"
+                class="text-gray-600 hover:text-gray-900 flex items-center transition-colors duration-200" target="_blank">
                 <svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                 </svg>
-                +62 812-3740-4325
+                {{ '+62 ' . substr($sosmed['number'], 2, 3) . '-' . substr($sosmed['number'], 5, 4) . '-' . substr($sosmed['number'], 9) }}
             </a>
+            @endif
+
         </div>
     </div>
 
@@ -139,13 +150,13 @@
                             class="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                             <div class="py-1">
                                 @forelse(App\Models\Layanan::where('status', true)->get() as $layanan)
-                                    <x-dropdown-link href="{{ route('layanan.show', $layanan->id) }}">
-                                        {{ $layanan->nama_layanan }}
-                                    </x-dropdown-link>
+                                <x-dropdown-link href="{{ route('layanan.show', $layanan->slug) }}">
+                                    {{ $layanan->nama_layanan }}
+                                </x-dropdown-link>
                                 @empty
-                                    <x-dropdown-link href="#">
-                                        Belum ada layanan
-                                    </x-dropdown-link>
+                                <x-dropdown-link href="#">
+                                    Belum ada layanan
+                                </x-dropdown-link>
                                 @endforelse
                             </div>
                         </div>
@@ -171,13 +182,13 @@
                             class="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                             <div class="py-1">
                                 @forelse(App\Models\Fasilitas::where('status', true)->get() as $fasilitas)
-                                    <x-dropdown-link href="{{ route('fasilitas.show', $fasilitas->id) }}">
-                                        {{ $fasilitas->nama_fasilitas }}
-                                    </x-dropdown-link>
+                                <x-dropdown-link href="{{ route('fasilitas.show', $fasilitas->slug) }}">
+                                    {{ $fasilitas->nama_fasilitas }}
+                                </x-dropdown-link>
                                 @empty
-                                    <x-dropdown-link href="#">
-                                        Belum ada fasilitas
-                                    </x-dropdown-link>
+                                <x-dropdown-link href="#">
+                                    Belum ada fasilitas
+                                </x-dropdown-link>
                                 @endforelse
                             </div>
                         </div>
@@ -187,61 +198,65 @@
 
                         <!-- BELI TIKET Button -->
                         @auth
-                            <!-- Desktop BELI TIKET Button for Authenticated Users -->
-                            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                                <a href="{{ route('reservasi') }}"
-                                    class="inline-flex items-center px-4 py-2 bg-blue-600 rounded-lg font-semibold text-xs text-white uppercase tracking-widest 
-                                    hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 transition ease-in-out duration-150">
-                                    {{ __('BELI TIKET') }}
-                                </a>
-                            </div>
-                        @else
-                            <!-- Desktop BELI TIKET Button for Guest Users -->
-                            <a href="{{ route('login') }}"
+                        <!-- Desktop BELI TIKET Button for Authenticated Users -->
+                        <div class="hidden sm:flex sm:items-center sm:ms-6">
+                            <a href="{{ route('reservasi') }}"
                                 class="inline-flex items-center px-4 py-2 bg-blue-600 rounded-lg font-semibold text-xs text-white uppercase tracking-widest 
-                                hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 transition ease-in-out duration-150">
+                                    hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 transition ease-in-out duration-150">
                                 {{ __('BELI TIKET') }}
                             </a>
+                        </div>
+                        @else
+                        <!-- Desktop BELI TIKET Button for Guest Users -->
+                        <a href="{{ route('login') }}"
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 rounded-lg font-semibold text-xs text-white uppercase tracking-widest 
+                                hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 transition ease-in-out duration-150">
+                            {{ __('BELI TIKET') }}
+                        </a>
                         @endauth
 
                         @auth
-                            <!-- Settings Dropdown -->
-                            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                                <x-dropdown align="right" width="48">
-                                    <x-slot name="trigger">
-                                        <button
-                                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                            <div>
-                                                <p>Halo, {{ Auth::user()->name }}
-                                                </p>
-                                            </div>
-                                            <div class="ms-1">
-                                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                            </div>
-                                        </button>
-                                    </x-slot>
+                        <!-- Settings Dropdown -->
+                        <div class="hidden sm:flex sm:items-center sm:ms-6">
+                            <x-dropdown align="right" width="48">
+                                <x-slot name="trigger">
+                                    <button
+                                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                        <div>
+                                            <p>Halo, {{ Auth::user()->name }}
+                                            </p>
+                                        </div>
+                                        <div class="ms-1">
+                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </x-slot>
 
-                                    <x-slot name="content">
-                                        <x-dropdown-link :href="route('profile.edit')">
-                                            {{ __('Edit Profil') }}
-                                        </x-dropdown-link>
+                                <x-slot name="content">
+                                    <x-dropdown-link :href="route('profile.edit')">
+                                        {{ __('Edit Profil') }}
+                                    </x-dropdown-link>
 
-                                        <!-- Authentication -->
-                                        <form method="POST" action="{{ route('logout') }}">
-                                            @csrf
-                                            <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
+                                    <x-dropdown-link :href="route('payment.riwayat')">
+                                        {{ __('Riwayat Pembayaran') }}
+                                    </x-dropdown-link>
+
+                                    <!-- Authentication -->
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
                                                             this.closest('form').submit();">
-                                                {{ __('Keluar') }}
-                                            </x-dropdown-link>
-                                        </form>
-                                    </x-slot>
-                                </x-dropdown>
-                            </div>
+                                            {{ __('Keluar') }}
+                                        </x-dropdown-link>
+                                    </form>
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
                         @endauth
 
                         <!-- Hamburger -->
@@ -310,13 +325,13 @@
                         </button>
                         <div x-show="open" x-transition class="pl-4">
                             @forelse(App\Models\Layanan::where('status', true)->get() as $layanan)
-                                <x-responsive-nav-link href="{{ route('layanan.show', $layanan->id) }}">
-                                    {{ $layanan->nama_layanan }}
-                                </x-responsive-nav-link>
+                            <x-responsive-nav-link href="{{ route('layanan.show', $layanan->id) }}">
+                                {{ $layanan->nama_layanan }}
+                            </x-responsive-nav-link>
                             @empty
-                                <x-responsive-nav-link href="#">
-                                    Belum ada layanan
-                                </x-responsive-nav-link>
+                            <x-responsive-nav-link href="#">
+                                Belum ada layanan
+                            </x-responsive-nav-link>
                             @endforelse
                         </div>
                     </div>
@@ -335,13 +350,13 @@
                         </button>
                         <div x-show="open" x-transition class="pl-4">
                             @forelse(App\Models\Fasilitas::where('status', true)->get() as $fasilitas)
-                                <x-responsive-nav-link href="{{ route('fasilitas.show', $fasilitas->id) }}">
-                                    {{ $fasilitas->nama_fasilitas }}
-                                </x-responsive-nav-link>
+                            <x-responsive-nav-link href="{{ route('fasilitas.show', $fasilitas->id) }}">
+                                {{ $fasilitas->nama_fasilitas }}
+                            </x-responsive-nav-link>
                             @empty
-                                <x-responsive-nav-link href="#">
-                                    Belum ada fasilitas
-                                </x-responsive-nav-link>
+                            <x-responsive-nav-link href="#">
+                                Belum ada fasilitas
+                            </x-responsive-nav-link>
                             @endforelse
                         </div>
                     </div>
@@ -349,44 +364,44 @@
                     <!-- Mobile BELI TIKET Button -->
                     <div class="px-4 pt-2">
                         @auth
-                            <!-- Mobile BELI TIKET Button for Authenticated Users -->
-                            <a href="{{ route('booking') }}"
-                                class="block w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest text-center hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition ease-in-out duration-150">
-                                {{ __('BELI TIKET') }}
-                            </a>
+                        <!-- Mobile BELI TIKET Button for Authenticated Users -->
+                        <a href="{{ route('reservasi') }}"
+                            class="block w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest text-center hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition ease-in-out duration-150">
+                            {{ __('BELI TIKET') }}
+                        </a>
                         @else
-                            <!-- Mobile BELI TIKET Button for Guest Users -->
-                            <a href="{{ route('login') }}"
-                                class="block w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest text-center hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition ease-in-out duration-150">
-                                {{ __('BELI TIKET') }}
-                            </a>
+                        <!-- Mobile BELI TIKET Button for Guest Users -->
+                        <a href="{{ route('login') }}"
+                            class="block w-full px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest text-center hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition ease-in-out duration-150">
+                            {{ __('BELI TIKET') }}
+                        </a>
                         @endauth
                     </div>
                 </div>
 
                 <!-- Responsive Settings Options -->
                 @auth
-                    <div class="pt-4 pb-1 border-t border-gray-200">
-                        <div class="px-4">
-                            <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                            <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-                        </div>
-
-                        <div class="mt-3 space-y-1">
-                            <x-responsive-nav-link :href="route('profile.edit')">
-                                {{ __('Edit Profil') }}
-                            </x-responsive-nav-link>
-
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                    {{ __('Keluar') }}
-                                </x-responsive-nav-link>
-                            </form>
-                        </div>
+                <div class="pt-4 pb-1 border-t border-gray-200">
+                    <div class="px-4">
+                        <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                        <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
                     </div>
+
+                    <div class="mt-3 space-y-1">
+                        <x-responsive-nav-link :href="route('profile.edit')">
+                            {{ __('Edit Profil') }}
+                        </x-responsive-nav-link>
+
+                        <!-- Authentication -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Keluar') }}
+                            </x-responsive-nav-link>
+                        </form>
+                    </div>
+                </div>
                 @endauth
             </div>
 </nav>

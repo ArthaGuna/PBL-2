@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Layanan extends Model
@@ -14,6 +15,7 @@ class Layanan extends Model
 
     protected $fillable = [
         'nama_layanan',
+        'slug',
         'deskripsi',
         'gambar',
         'jumlah',
@@ -33,6 +35,15 @@ class Layanan extends Model
     {
         static::creating(function ($layanan) {
             $layanan->stok = $layanan->jumlah;
+        });
+
+        static::creating(function ($layanan) {
+            $layanan->slug = Str::slug($layanan->nama_layanan);
+            $layanan->stok = $layanan->jumlah;
+        });
+
+        static::updating(function ($layanan) {
+            $layanan->slug = Str::slug($layanan->nama_layanan);
         });
     }
 
@@ -56,10 +67,5 @@ class Layanan extends Model
     public function reservasis(): HasMany
     {
         return $this->hasMany(Reservasi::class);
-    }
-
-    public function detailReservasis(): HasMany
-    {
-        return $this->hasMany(DetailReservasi::class, 'layanan_id');
     }
 }

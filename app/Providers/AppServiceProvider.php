@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Informasi;
+use App\Models\Setelan;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,8 +20,21 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot()
     {
-        //
+        View::composer('*', function ($view) {
+            $informasi = Informasi::first();
+
+            $sosmed = [
+                'wa' => ($number = Setelan::where('key', 'number')->value('value'))
+                    ? 'https://wa.me/' . preg_replace('/[^0-9]/', '', $number)
+                    : null,
+                'number' => $number,
+                'facebook' => Setelan::where('key', 'facebook')->value('value'),
+                'instagram' => Setelan::where('key', 'instagram')->value('value'),
+            ];
+
+            $view->with(compact('informasi', 'sosmed'));
+        });
     }
 }

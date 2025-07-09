@@ -57,7 +57,17 @@ class LayananResource extends Resource
                                         TextInput::make('nama_layanan')
                                             ->label('Nama Layanan')
                                             ->required()
-                                            ->maxLength(255),
+                                            ->maxLength(255)
+                                            ->live(onBlur: true)
+                                            ->afterStateUpdated(function ($state, callable $set) {
+                                                $set('slug', str()->slug($state));
+                                            }),
+
+                                        TextInput::make('slug')
+                                            ->label('Slug')
+                                            ->required()
+                                            ->unique(Layanan::class, 'slug', ignoreRecord: true)
+                                            ->disabled(),
 
                                         Textarea::make('deskripsi')
                                             ->label('Deskripsi')

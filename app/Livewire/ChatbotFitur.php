@@ -39,7 +39,6 @@ class ChatbotFitur extends Component
                 }
             }
         }
-
         return null;
     }
 

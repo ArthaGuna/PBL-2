@@ -31,7 +31,10 @@ class AppServiceProvider extends ServiceProvider
                     : null,
                 'number' => $number,
                 'facebook' => Setelan::where('key', 'facebook')->value('value'),
+                'linkedin' => Setelan::where('key', 'linkedin')->value('value'),
+                'youtube' => Setelan::where('key', 'youtube')->value('value'),
                 'instagram' => Setelan::where('key', 'instagram')->value('value'),
+                'email' => Setelan::where('key', 'email')->value('value'),
             ];
 
             $view->with(compact('informasi', 'sosmed'));

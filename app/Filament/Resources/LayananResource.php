@@ -143,12 +143,27 @@ class LayananResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('gambar')->label('Gambar'),
-                TextColumn::make('nama_layanan')->label('Nama Layanan')->searchable()->sortable(),
-                TextColumn::make('jumlah')->label('Jumlah'),
-                TextColumn::make('stok')->label('Stok'),
-                TextColumn::make('durasi')->label('Durasi'),
-                IconColumn::make('status')->label('Status')->boolean(),
+                ImageColumn::make('gambar')
+                    ->label('Gambar'),
+
+                TextColumn::make('nama_layanan')
+                    ->label('Nama Layanan')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('jumlah')
+                    ->label('Jumlah'),
+
+                TextColumn::make('stok')
+                    ->label('Stok (Tersedia)'),
+
+                TextColumn::make('durasi')
+                    ->label('Durasi')
+                    ->formatStateUsing(fn($state) => $state . ' menit'),
+
+                IconColumn::make('status')
+                    ->label('Status')
+                    ->boolean(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

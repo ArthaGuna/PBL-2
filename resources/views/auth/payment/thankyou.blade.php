@@ -114,25 +114,43 @@
                     <div class="bg-gray-50 rounded-lg p-4 mb-8 border border-gray-200">
                         <h4 class="text-md font-semibold text-gray-800 mb-2">Butuh Bantuan?</h4>
                         <p class="text-sm text-gray-600">
-                            Hubungi kami di <strong>+62 123 456 789</strong> atau <strong>info@espabali.com</strong>
+                            Hubungi kami di <strong> <a href="{{ $sosmed['wa'] }}">
+                                    {{ '+62 ' . substr($sosmed['number'], 2, 3) . '-' . substr($sosmed['number'], 5, 4) . '-' . substr($sosmed['number'], 9) }}
+                                </a> </strong> atau <strong><a href="{{ $sosmed['email'] }}">
+                                    {{$sosmed['email']}}
+                                </a></strong>
                         </p>
                     </div>
 
+
                     <!-- Tombol -->
-                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-4 mt-6">
                         <a href="{{ route('home') }}"
                             class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-center transition font-medium">
                             Kembali ke Beranda
                         </a>
-                        <button onclick="window.print()"
+
+                        @php
+                        $waNumber = preg_replace('/[^0-9]/', '', $sosmed['number'] ?? '');
+                        $waMessage = urlencode("Halo admin, saya ingin menanyakan reservasi dengan kode: {$reservasi->kode_booking}, atas nama: {$reservasi->nama_pengunjung}");
+                        @endphp
+                        @if ($waNumber)
+                        <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}"
+                            target="_blank"
+                            class="px-6 py-3 border border-green-600 text-green-700 rounded-lg hover:bg-green-50 text-center transition font-medium">
+                            Hubungi via WhatsApp
+                        </a>
+                        @endif
+                        <!-- <button onclick="window.print()"
                             class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-center transition font-medium">
                             Cetak Bukti Reservasi
-                        </button>
+                        </button> -->
                         <a href="{{ route('reservasi') }}"
                             class="px-6 py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 text-center transition font-medium">
                             Buat Reservasi Baru
                         </a>
                     </div>
+
                 </div>
             </div>
         </div>

@@ -24,23 +24,24 @@
             <div>
                 <h2 class="text-lg font-semibold mb-3">Kontak Kami</h2>
                 <ul class="space-y-2 text-sm text-gray-300">
-                    <li>
-                        <a href="{{ $sosmed['wa'] ?? '#' }}" class="hover:text-white" target="_blank" rel="noopener noreferrer">
-                            WhatsApp
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ $sosmed['facebook'] ?? '#' }}" class="hover:text-white" target="_blank" rel="noopener noreferrer">
-                            Facebook
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ $sosmed['instagram'] ?? '#' }}" class="hover:text-white" target="_blank" rel="noopener noreferrer">
-                            Instagram
-                        </a>
-                    </li>
+                    @if (!empty($sosmed['wa']))
+                    <li><a href="{{ $sosmed['wa'] }}" class="hover:text-white" target="_blank">WhatsApp</a></li>
+                    @endif
+                    @if (!empty($sosmed['facebook']))
+                    <li><a href="{{ $sosmed['facebook'] }}" class="hover:text-white" target="_blank">Facebook</a></li>
+                    @endif
+                    @if (!empty($sosmed['instagram']))
+                    <li><a href="{{ $sosmed['instagram'] }}" class="hover:text-white" target="_blank">Instagram</a></li>
+                    @endif
+                    @if (!empty($sosmed['youtube']))
+                    <li><a href="{{ $sosmed['youtube'] }}" class="hover:text-white" target="_blank">Youtube</a></li>
+                    @endif
+                    @if (!empty($sosmed['linkedin']))
+                    <li><a href="{{ $sosmed['linkedin'] }}" class="hover:text-white" target="_blank">Linkedin</a></li>
+                    @endif
                 </ul>
             </div>
+
 
             {{-- Jam Operasional --}}
             <div>

@@ -37,7 +37,7 @@
     <div class="bg-gray-100 transition-all duration-500 ease-in-out transform"
         :class="scrolled ? 'h-0 opacity-0 overflow-hidden -translate-y-2' : 'h-10 opacity-100 translate-y-0'">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-end space-x-4">
-            <!-- Social Media Links -->
+
             <!-- Social Media Links dari database -->
             @if (!empty($sosmed['instagram']))
             <a href="{{ $sosmed['instagram'] }}"

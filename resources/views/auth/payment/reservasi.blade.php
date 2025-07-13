@@ -43,80 +43,88 @@
                                     <label class="block mb-2 text-sm font-medium text-gray-700">Pilih Layanan</label>
                                     <div class="space-y-2">
                                         @foreach ($layanans as $layanan)
-                                        <div class="flex items-center ps-4 border border-gray-200 rounded-lg hover:border-blue-500">
+                                        @php
+                                        $stokHabis = $layanan->stok <= 0;
+                                            @endphp
+                                            <div class="flex items-center ps-4 border border-gray-200 rounded-lg {{ $stokHabis ? 'opacity-50 cursor-not-allowed' : 'hover:border-blue-500' }}">
                                             <input type="radio" id="layanan-{{ $layanan->id }}"
                                                 name="layanan" value="{{ $layanan->id }}"
                                                 data-harga="{{ $layanan->tiket->harga ?? 0 }}"
                                                 data-maks="{{ $layanan->tiket->maks_pengunjung ?? 10 }}"
                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300"
-                                                {{ $loop->first ? 'checked' : '' }}>
+                                                {{ $stokHabis ? 'disabled' : ($loop->first ? 'checked' : '') }}>
                                             <label for="layanan-{{ $layanan->id }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900">
                                                 {{ $layanan->nama_layanan }}
-                                                <p class="text-xs text-gray-500 mt-1">Rp {{ number_format($layanan->tiket->harga ?? 0, 0, ',', '.') }}/orang</p>
+                                                <p class="text-xs text-gray-500 mt-1">
+                                                    Rp {{ number_format($layanan->tiket->harga ?? 0, 0, ',', '.') }}/orang
+                                                    @if ($stokHabis)
+                                                    <span class="text-red-600 font-semibold"> (Stok habis)</span>
+                                                    @endif
+                                                </p>
                                             </label>
-                                        </div>
-                                        @endforeach
                                     </div>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="tanggal" class="block mb-2 text-sm text-gray-700">Tanggal Kunjungan</label>
-                                        <input type="date" id="tanggal" name="tanggal" min="{{ date('Y-m-d') }}"
-                                            class="bg-gray-50 border border-gray-300 text-sm rounded-lg w-full p-2.5" required>
-                                    </div>
-                                    <div>
-                                        <label for="waktu" class="block mb-2 text-sm text-gray-700">Waktu Kunjungan</label>
-                                        <input type="time" id="waktu" name="waktu" min="08:00" max="20:00"
-                                            class="bg-gray-50 border border-gray-300 text-sm rounded-lg w-full p-2.5" required>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label for="jumlah_orang" class="block mb-2 text-sm font-medium text-gray-700">Jumlah Pengunjung</label>
-                                    <input type="number" id="jumlah_orang" name="jumlah_orang" min="1" value="1"
-                                        class="bg-gray-50 border border-gray-300 text-sm rounded-lg w-full p-2.5" required>
-                                    <p id="jumlah-error" class="mt-1 text-xs text-red-600 hidden"></p>
+                                    @endforeach
                                 </div>
                             </div>
 
-                            <!-- Kolom Kanan -->
-                            <div class="flex-1 space-y-4">
-                                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 lg:sticky lg:top-6">
-                                    <h3 class="text-lg font-semibold mb-4">Ringkasan Pembayaran</h3>
-
-                                    <div class="space-y-2">
-                                        <div class="flex justify-between">
-                                            <span>Subtotal:</span>
-                                            <span id="subtotal" class="font-semibold">-</span>
-                                        </div>
-                                        <hr>
-                                        <div class="flex justify-between">
-                                            <span class="font-bold text-base">Total Bayar:</span>
-                                            <span id="total-bayar" class="text-blue-600 font-bold text-lg">-</span>
-                                        </div>
-                                    </div>
-
-                                    <button type="submit" id="pay-button"
-                                        class="w-full mt-4 text-white bg-gray-400 cursor-not-allowed text-xs px-5 py-3 rounded-lg uppercase tracking-wide"
-                                        disabled>
-                                        BAYAR SEKARANG
-                                    </button>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="tanggal" class="block mb-2 text-sm text-gray-700">Tanggal Kunjungan</label>
+                                    <input type="date" id="tanggal" name="tanggal" min="{{ date('Y-m-d') }}"
+                                        class="bg-gray-50 border border-gray-300 text-sm rounded-lg w-full p-2.5" required>
                                 </div>
-
-                                <div class="p-3 bg-blue-50 rounded-lg border border-blue-100 text-xs text-blue-700">
-                                    <strong class="block text-blue-800 mb-1">Informasi Penting</strong>
-                                    <ul class="list-disc list-inside space-y-1">
-                                        <li>Pembayaran harus dilakukan dalam waktu 1x24 jam</li>
-                                        <li>Tunjukkan nomor booking ke petugas tiket</li>
-                                    </ul>
+                                <div>
+                                    <label for="waktu" class="block mb-2 text-sm text-gray-700">Waktu Kunjungan</label>
+                                    <input type="time" id="waktu" name="waktu" min="08:00" max="24:00"
+                                        class="bg-gray-50 border border-gray-300 text-sm rounded-lg w-full p-2.5" required>
                                 </div>
+                            </div>
+
+                            <div>
+                                <label for="jumlah_orang" class="block mb-2 text-sm font-medium text-gray-700">Jumlah Pengunjung</label>
+                                <input type="number" id="jumlah_orang" name="jumlah_orang" min="1" value="1"
+                                    class="bg-gray-50 border border-gray-300 text-sm rounded-lg w-full p-2.5" required>
+                                <p id="jumlah-error" class="mt-1 text-xs text-red-600 hidden"></p>
                             </div>
                         </div>
-                    </form>
+
+                        <!-- Kolom Kanan -->
+                        <div class="flex-1 space-y-4">
+                            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 lg:sticky lg:top-6">
+                                <h3 class="text-lg font-semibold mb-4">Ringkasan Pembayaran</h3>
+
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span>Subtotal:</span>
+                                        <span id="subtotal" class="font-semibold">-</span>
+                                    </div>
+                                    <hr>
+                                    <div class="flex justify-between">
+                                        <span class="font-bold text-base">Total Bayar:</span>
+                                        <span id="total-bayar" class="text-blue-600 font-bold text-lg">-</span>
+                                    </div>
+                                </div>
+
+                                <button type="submit" id="pay-button"
+                                    class="w-full mt-4 text-white bg-gray-400 cursor-not-allowed text-xs px-5 py-3 rounded-lg uppercase tracking-wide"
+                                    disabled>
+                                    BAYAR SEKARANG
+                                </button>
+                            </div>
+
+                            <div class="p-3 bg-blue-50 rounded-lg border border-blue-100 text-xs text-blue-700">
+                                <strong class="block text-blue-800 mb-1">Informasi Penting</strong>
+                                <ul class="list-disc list-inside space-y-1">
+                                    <li>Pembayaran harus dilakukan dalam waktu 1x24 jam</li>
+                                    <li>Tunjukkan nomor booking ke petugas tiket</li>
+                                </ul>
+                            </div>
+                        </div>
                 </div>
+                </form>
             </div>
         </div>
+    </div>
     </div>
 
     @section('scripts')

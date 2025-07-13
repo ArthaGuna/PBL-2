@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Carbon\Carbon;
 
 class ReservasiResource extends Resource
 {
@@ -52,7 +53,11 @@ class ReservasiResource extends Resource
             DatePicker::make('tanggal_kunjungan')->disabled(),
             TimePicker::make('waktu_kunjungan')
                 ->label('Waktu')
-                ->formatStateUsing(fn($state) => \Carbon\Carbon::parse($state)->format('H:i')),
+                ->formatStateUsing(fn($state) => Carbon::parse($state)->format('H:i')),
+            TextInput::make('waktu_selesai')
+                ->label('Waktu Selesai')
+                ->disabled()
+                ->formatStateUsing(fn($state) => $state ? Carbon::parse($state)->format('H:i') : '-'),
             TextInput::make('jumlah_pengunjung')->numeric()->disabled(),
             TextInput::make('total_harga')->numeric()->disabled(),
             TextInput::make('total_bayar')->numeric()->disabled(),
@@ -63,7 +68,7 @@ class ReservasiResource extends Resource
                     'failed' => 'Failed',
                     'cancelled' => 'Cancelled',
                 ])->disabled(),
-            Toggle::make('stok_dikurangi')->disabled(),
+            // Toggle::make('stok_dikurangi')->disabled(),
         ]);
     }
 
@@ -76,7 +81,11 @@ class ReservasiResource extends Resource
                 TextColumn::make('layanan.nama_layanan')->label('Layanan'),
                 TextColumn::make('tanggal_kunjungan')->date(),
                 TextColumn::make('waktu_kunjungan')
-                    ->formatStateUsing(fn($state) => \Carbon\Carbon::parse($state)->format('H:i')),
+                    ->label('Waktu')
+                    ->formatStateUsing(fn($state) => Carbon::parse($state)->format('H:i')),
+                TextColumn::make('waktu_selesai')
+                    ->label('Waktu Selesai')
+                    ->formatStateUsing(fn($state) => $state ? Carbon::parse($state)->format('H:i') : '-'),
                 TextColumn::make('jumlah_pengunjung'),
                 TextColumn::make('total_bayar')->money('IDR'),
                 TextColumn::make('status_pembayaran')
@@ -88,10 +97,25 @@ class ReservasiResource extends Resource
                         default => 'gray',
                     }),
             ])
-            ->filters([])
+            ->filters([]) // bisa tambahkan filter jika perlu
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+
+                Tables\Actions\Action::make('restoreStok')
+                    ->label('Restore Stok')
+                    ->color('warning')
+                    ->icon('heroicon-o-arrow-path')
+                    ->requiresConfirmation()
+                    ->visible(fn($record) => $record->stok_dikurangi) // hanya muncul kalau stok dikurangi
+                    ->action(function ($record) {
+                        $record->restoreStokLayanan();
+
+                        \Filament\Notifications\Notification::make()
+                            ->title("Stok dikembalikan untuk {$record->kode_booking}")
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -103,7 +127,7 @@ class ReservasiResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // DetailReservasisRelationManager::class
+            // bisa ditambahkan relasi jika diperlukan
         ];
     }
 

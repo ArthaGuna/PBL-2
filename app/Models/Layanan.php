@@ -34,10 +34,6 @@ class Layanan extends Model
     protected static function booted()
     {
         static::creating(function ($layanan) {
-            $layanan->stok = $layanan->jumlah;
-        });
-
-        static::creating(function ($layanan) {
             $layanan->slug = Str::slug($layanan->nama_layanan);
             $layanan->stok = $layanan->jumlah;
         });
@@ -59,13 +55,13 @@ class Layanan extends Model
         $this->save();
     }
 
-    public function tiket()
-    {
-        return $this->hasOne(InformasiTiket::class);
-    }
-
     public function reservasis(): HasMany
     {
         return $this->hasMany(Reservasi::class);
+    }
+
+    public function tiket()
+    {
+        return $this->hasOne(InformasiTiket::class);
     }
 }

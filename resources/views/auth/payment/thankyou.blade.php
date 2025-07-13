@@ -65,7 +65,7 @@
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500">Waktu Kunjungan</p>
-                                <p class="font-medium">{{ $reservasi->waktu_kunjungan }} WIB</p>
+                                <p class="font-medium">{{ $reservasi->waktu_kunjungan }} WITA</p>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500">Jumlah Pengunjung</p>
@@ -75,14 +75,16 @@
                                 <p class="text-sm text-gray-500">Tanggal Reservasi</p>
                                 <p class="font-medium">
                                     {{ \Carbon\Carbon::parse($reservasi->created_at)->translatedFormat('d F Y, H:i') }}
-                                    WIB</p>
+                                    WITA
+                                </p>
                             </div>
                             <div class="md:col-span-2 pt-4 border-t border-gray-200">
                                 <div class="flex justify-between items-center">
                                     <div>
                                         <p class="text-sm text-gray-500">Total Pembayaran</p>
                                         <p class="text-xl font-bold text-blue-600">Rp
-                                            {{ number_format($reservasi->total_bayar, 0, ',', '.') }}</p>
+                                            {{ number_format($reservasi->total_bayar, 0, ',', '.') }}
+                                        </p>
                                     </div>
                                     <div class="text-right">
                                         <p class="text-xs text-gray-500">Metode Pembayaran</p>
@@ -162,7 +164,7 @@
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             window.scrollTo(0, 0);
             document.querySelector('.bg-white.overflow-hidden').classList.add('print-area');
             const buttons = document.querySelectorAll('a[href], button');

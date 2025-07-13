@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('nama_pengunjung');
             $table->date('tanggal_kunjungan');
             $table->time('waktu_kunjungan');
+            $table->time('waktu_selesai')->nullable();
             $table->integer('jumlah_pengunjung');
             $table->decimal('total_harga', 12, 2);
             $table->decimal('diskon', 12, 2)->default(0);
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->string('midtrans_transaction_id')->nullable();
             $table->string('midtrans_payment_type')->nullable();
             $table->string('midtrans_transaction_status')->nullable();
+            $table->string('snap_token')->nullable();
             $table->string('bukti_pembayaran')->nullable();
             $table->timestamps();
         });

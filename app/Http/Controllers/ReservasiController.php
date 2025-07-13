@@ -34,13 +34,18 @@ class ReservasiController extends Controller
             $hargaTiket = $layanan->tiket->harga;
             $totalHarga = $hargaTiket * $validated['jumlah_orang'];
 
+            $waktuMulai = Carbon::createFromFormat('H:i', $validated['waktu']);
+            $durasiMenit = $layanan->durasi ?? 0;
+            $waktuSelesai = $waktuMulai->copy()->addMinutes($durasiMenit);
+
             $reservasi = Reservasi::create([
                 'user_id' => Auth::id(),
                 'nama_pengunjung' => $validated['nama'],
                 'layanan_id' => $layanan->id,
                 'kode_booking' => 'ESPA-' . time() . '-' . Auth::id(),
                 'tanggal_kunjungan' => $validated['tanggal'],
-                'waktu_kunjungan' => $validated['waktu'],
+                'waktu_kunjungan' => $waktuMulai->format('H:i:s'),
+                'waktu_selesai' => $waktuSelesai->format('H:i:s'),
                 'jumlah_pengunjung' => $validated['jumlah_orang'],
                 'total_harga' => $totalHarga,
                 'total_bayar' => $totalHarga,
@@ -48,12 +53,12 @@ class ReservasiController extends Controller
                 'stok_dikurangi' => false,
             ]);
 
+            Log::info('Reservasi dibuat: ' . $reservasi->kode_booking);
+
             \Midtrans\Config::$serverKey = config('midtrans.server_key');
             \Midtrans\Config::$isProduction = config('midtrans.isProduction', false);
             \Midtrans\Config::$isSanitized = true;
             \Midtrans\Config::$is3ds = config('midtrans.is3ds', true);
-
-            // \Midtrans\Config::$curlOptions[CURLOPT_CAINFO] = 'D:/laragon/etc/ssl/cacert.pem';
 
             $params = [
                 'transaction_details' => [
@@ -86,7 +91,6 @@ class ReservasiController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Reservasi proses error', ['error' => $e->getMessage()]);
-
             return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal memproses reservasi: ' . $e->getMessage(),
@@ -96,7 +100,7 @@ class ReservasiController extends Controller
 
     public function handleNotification(Request $request)
     {
-        Log::info('Midtrans notification received:', $request->all());
+        Log::info('Midtrans notification received', $request->all());
 
         try {
             \Midtrans\Config::$serverKey = config('midtrans.server_key');
@@ -104,22 +108,22 @@ class ReservasiController extends Controller
 
             $notif = new \Midtrans\Notification();
 
-            // Log::info('Midtrans notification object:', (array) $notif);
-
             $transaction = $notif->transaction_status;
             $order_id = $notif->order_id;
             $fraud = $notif->fraud_status;
 
             $reservasi = Reservasi::where('kode_booking', $order_id)->firstOrFail();
 
-            // Update status pembayaran
+            Log::info("Reservasi ditemukan: $order_id, status: $transaction");
+
+            // Status
             if ($transaction === 'capture') {
                 $reservasi->status_pembayaran = ($fraud === 'challenge') ? 'pending' : 'success';
             } elseif ($transaction === 'settlement') {
                 $reservasi->status_pembayaran = 'success';
             } elseif ($transaction === 'pending') {
                 $reservasi->status_pembayaran = 'pending';
-            } elseif (in_array($transaction, ['deny'])) {
+            } elseif ($transaction === 'deny') {
                 $reservasi->status_pembayaran = 'failed';
             } elseif (in_array($transaction, ['cancel', 'expire'])) {
                 $reservasi->status_pembayaran = 'cancelled';
@@ -132,13 +136,15 @@ class ReservasiController extends Controller
                 'status_pembayaran' => $reservasi->status_pembayaran,
             ]);
 
-            // Kurangi stok saat success, sekali saja
-            if ($reservasi->status_pembayaran === 'success') {
+            // Kurangi stok
+            if ($reservasi->status_pembayaran === 'success' && !$reservasi->stok_dikurangi) {
+                Log::info("Mengurangi stok untuk booking: {$reservasi->kode_booking}");
                 $reservasi->kurangiStokLayanan();
             }
 
-            // Restore stok jika gagal/cancel dan sebelumnya sudah dikurangi
+            // Restore jika batal/gagal
             if (in_array($reservasi->status_pembayaran, ['failed', 'cancelled']) && $reservasi->stok_dikurangi) {
+                Log::info("Mengembalikan stok untuk booking: {$reservasi->kode_booking}");
                 $reservasi->restoreStokLayanan();
             }
 
@@ -151,7 +157,7 @@ class ReservasiController extends Controller
 
     public function showForm()
     {
-        $layanans = Layanan::where('status', true)->get(); // atau kamu bisa tambahkan filter lainnya
+        $layanans = Layanan::where('status', true)->get();
         return view('auth.payment.reservasi', compact('layanans'));
     }
 
@@ -176,17 +182,17 @@ class ReservasiController extends Controller
     {
         $query = Reservasi::where('user_id', Auth::id())->latest();
 
-        if ($request->has('status') && $request->status !== 'all') {
+        if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status_pembayaran', $request->status);
         }
 
-        if ($request->has('tanggal') && $request->tanggal) {
+        if ($request->filled('tanggal')) {
             try {
                 $bulan = Carbon::createFromFormat('Y-m', $request->tanggal);
                 $query->whereMonth('tanggal_kunjungan', $bulan->month)
                     ->whereYear('tanggal_kunjungan', $bulan->year);
             } catch (\Exception $e) {
-                // Invalid format, skip filter
+                // format error diabaikan
             }
         }
 
@@ -194,6 +200,7 @@ class ReservasiController extends Controller
 
         return view('auth.payment.riwayat', compact('reservasis'));
     }
+
     public function detail($id)
     {
         $reservasi = Reservasi::with('layanan')->where('user_id', Auth::id())->findOrFail($id);

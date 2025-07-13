@@ -20,6 +20,7 @@ class Reservasi extends Model
         'nama_pengunjung',
         'tanggal_kunjungan',
         'waktu_kunjungan',
+        'waktu_selesai',
         'jumlah_pengunjung',
         'total_harga',
         'diskon',
@@ -30,11 +31,14 @@ class Reservasi extends Model
         'midtrans_transaction_id',
         'midtrans_payment_type',
         'midtrans_transaction_status',
+        'snap_token',
         'bukti_pembayaran',
     ];
 
     protected $casts = [
         'tanggal_kunjungan' => 'date',
+        'waktu_kunjungan' => 'datetime:H:i:s',
+        'waktu_selesai' => 'datetime:H:i:s',
         'stok_dikurangi' => 'boolean',
     ];
 
